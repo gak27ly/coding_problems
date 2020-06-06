@@ -193,3 +193,30 @@ class Solution:
             return max(leftHeight, rightHeight) + 1, False
         
         return max(leftHeight, rightHeight) + 1, True
+'''
+902. BST中第K小的元素
+给一棵二叉搜索树，写一个 KthSmallest 函数来找到其中第 K 小的元素。
+
+解法： 使用stack来存nodes， 一路向左将点加入栈中， 弹出一个点，看是否有右点，再将此右点的左点全部压入栈中。
+依此顺序弹出k-1个点后栈顶的点就是第k大的元素。
+'''
+def kthSmallest(self, root, k):
+    # write your code here
+    if not root:
+        return None
+    node = root
+    stack = []
+    
+    while node:
+        stack.append(node)
+        node = node.left
+
+    for i in range(k-1):
+        node = stack.pop()
+        if node.right:
+            node = node.right
+            while node:
+                stack.append(node)
+                node = node.left
+    
+    return stack[-1].val
