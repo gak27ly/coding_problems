@@ -220,3 +220,39 @@ def kthSmallest(self, root, k):
                 node = node.left
     
     return stack[-1].val
+
+'''
+578. Lowest Common Ancestor III
+
+Given the root and two nodes in a Binary Tree. Find the lowest common ancestor(LCA) of the two nodes.
+The lowest common ancestor is the node with largest depth which is the ancestor of both nodes.
+Return null if LCA does not exist.
+解法： 考虑返回的情况时，是否找到了node A and node B. 如果一个点找到了node A, node B， 就反回这个点作为lca.
+'''
+def lowestCommonAncestor3(self, root, A, B):
+    # write your code here
+    if not root:
+        return None
+    hasA, hasB, LCA = self.helper(root, A, B)
+    return LCA
+
+def helper(self, root, A, B):
+    if not root:
+        return False, False, None
+
+    leftHasA, leftHasB, leftLca = self.helper(root.left, A, B)
+    rightHasA, rightHasB, rightLca = self.helper(root.right, A, B)
+    
+    hasA = leftHasA or rightHasA or root == A
+    hasB = leftHasB or rightHasB or root == B
+    
+    if leftLca:
+        return hasA, hasB, leftLca
+    
+    if rightLca:
+        return hasA, hasB, rightLca
+    
+    if hasA and hasB:
+        return hasA, hasB, root
+
+    return hasA, hasB, None
