@@ -256,3 +256,57 @@ def helper(self, root, A, B):
         return hasA, hasB, root
 
     return hasA, hasB, None
+
+
+
+'''
+95. Validate Binary Search Tree
+Given a binary tree, determine if it is a valid binary search tree (BST).
+Assume a BST is defined as follows:
+The left subtree of a node contains only nodes with keys less than the node's key.
+The right subtree of a node contains only nodes with keys greater than the node's key.
+解法1: 设置上下边界，通过不断更改上下边界来判断当前node是否符合BST
+'''
+def isValidBST(self, root):
+    # write your code here
+    isValid = self.helper(root, sys.maxsize, -sys.maxsize + 1)
+    return isValid
+    
+def helper(self, root, maxNum, minNum):
+    if not root:
+        return True
+    
+    if root.val >= maxNum or root.val <= minNum:
+        return False
+    
+    return self.helper(root.left, root.val, minNum) and self.helper(root.right, maxNum, root.val)
+
+'''
+解法2: 中序遍历， 将所有左边node加入stack，记录一个last_node， 如果pop出来的parent小于last_node，return False
+还需要看是否有right node，如果有也要加入下一轮循环
+如果所有点都符合，最后return True
+'''
+
+def isValidBST(self, root):
+    stack = []
+    curr = root
+    last_val = -sys.maxsize - 1
+    
+    while stack or curr:
+        while curr:
+            stack.append(curr)
+            curr = curr.left
+            
+        curr = stack.pop()
+        if curr.val <= last_val:
+            return False
+
+        last_val = curr.val
+        curr = curr.right 
+    
+    return True
+
+
+
+
+
