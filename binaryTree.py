@@ -39,7 +39,8 @@ The tree is look like this:
  / \   /  \
 1   2 -4  -5 
 The sum of whole tree is minimum, so return the root.
-方法1：设置全局变量，用helper function遍历整个二叉树 不断地update最小值和最小node
+方法1：设置全局变量，用helper function遍历整个二叉树 求得每个node的sum
+并不断地update最小值和最小node
 '''
 def findSubtree(self, root):
     # write your code here
@@ -306,7 +307,116 @@ def isValidBST(self, root):
     
     return True
 
+'''
+Given a binary tree, find the subtree with maximum average. Return the root of the subtree.
+解法： 分治法，得到子树的合，nodes数量，子树中的最大平均值和最大子树。
+'''
+def findSubtree2(self, root):
+    # write your code here
+    
+    nodeSum, numOfNodes, maxAverge, maxNode = self.helper(root)
+    
+    return maxNode
+    
+
+def helper(self, root):
+    if not root:
+        return 0, 0, -sys.maxsize - 1, None
+        
+    leftSum, leftNodes, leftMaxAve, leftNode = self.helper(root.left)
+    rightSum, rightNodes, rightMaxAve, rightNode = self.helper(root.right)
+    
+    nodeSum = root.val + leftSum + rightSum
+    numOfNodes = leftNodes + rightNodes + 1
+    average = nodeSum / numOfNodes
+    
+    if average == max(leftMaxAve, rightMaxAve, average):
+        return nodeSum, numOfNodes, average, root
+    
+    if leftMaxAve == max(leftMaxAve, rightMaxAve, average):
+        return nodeSum, numOfNodes, leftMaxAve, leftNode
+    
+    return nodeSum, numOfNodes, rightMaxAve, rightNode
 
 
 
 
+# Binary Tree Path Sum 
+# Your are given a binary tree in which each node contains a value. 
+# Design an algorithm to get all paths which sum to a given value. 
+# The path does not need to start or end at the root or a leaf,
+#  but it must go in a straight line down.
+
+def binaryTreePathSum2(self, root, target):
+    # write your code here
+    combination, res = [], []
+    self.helper(root, target, 0, combination, res)
+
+    return res
+        
+
+def helper(self, root, target, total, combination, res):
+    if not root:
+        return 
+    
+    total += root.val
+    
+    combination.append(root.val)
+# //只有当到leaf的时候才能加入ressult
+    if not root.left and not root.right and total == target:
+        res.append(combination[:])
+
+    self.helper(root.left, target, total, combination, res)
+    self.helper(root.right, target, total, combination, res)
+
+    combination.pop()
+
+# 求二叉树最大深度
+
+def maxDepth(self, root):
+    # write your code here
+    if not root:
+        return 0
+        
+    
+    leftMax = self.maxDepth(root.left)
+    rightMax = self.maxDepth(root.right)
+    
+    if leftMax > rightMax:
+        return leftMax + 1
+        
+    else:
+        return rightMax + 1
+
+
+def maxDepth(self, root):
+    if not root:
+        return 0
+
+    return max(self.maxDepth(root.left), self.maxDepth(root.right)) + 1
+'''
+11. Search Range in Binary Search Tree
+Given a binary search tree and a range [k1, k2], return node values within a given range in ascending order.
+解法： 利用inorder traerse 特点来记录符合要求的点
+'''
+
+def searchRange(self, root, k1, k2):
+    # write your code here
+    result = []
+    self.traverse(root, k1, k2,result)
+    return result
+    
+def traverse(self, root, k1, k2, result):
+    
+    if not root:
+        return
+    
+    if root.val > k1:
+        self.traverse(root.left, k1, k2, result)
+    
+    if root.val >= k1 and root.val <= k2:
+        result.append(root.val)
+    
+    
+    if root.val < k2:
+            self.traverse(root.right, k1, k2, result)
