@@ -1,0 +1,84 @@
+管理类odd
+
+1. clarify-what？
+
+除了题目中问的名词以外 还要从管理的名词来考虑
+example：
+parking lot 还要考虑 vehicle， parking spot
+
+
+找到不同主体，然后问每个主体的特征
+example: 不同的车（bus, full-size, motorcycle）， 停车场特征（多层，露天）， spot(disable，eletric)
+
+How?
+主体具有哪些规则， 功能
+1. 如何停(大车栈两个位子）
+2. 如何收费(免费，按时，会员）
+
+
+
+2. core object -> 有进有出
+考虑input，output
+input: vehicle
+output: parking space
+
+白板上写下主体本身
+
+parking lot
+然后写下主体的input和output
+bus， car， motorcycle ----》parking lot ----〉spot
+然后考虑上述主体的映射关系
+
+parking lot 中加入一个list of cars:
+不好的原因： 
+1. parking lot 不需要知道停了什么车
+2. 停车场不因该依赖于车而存在， 不希望添加不必要的dependency
+3. 停车场是静态的，而车是动态的， 停进来的车不会断去修改这个list
+
+动态类和静态类相结合的时候(car --> parking lot):
+采用receipt（parking ticket）来存储信息动态的关系
+
+
+parking lot 和 spot之间是静态的关系，且parking lot 依赖于parking spot而存在。
+将spot加入parking lot类中.
+
+
+
+3. use case -> 从管理员角度考虑
+管理类 use case可以划分为以下三个部分：
+Reserve,Serve, Checkout
+
+类图设计：
+管理类经常使用收据的形式来保管信息
+
+
+将自己想象为停车场
+1. 当有车进来时候，看每一层是否停满，停入spot
+2. 有车要出去的时候，结算并清空位置。
+
+
+parking lot use case: 
+reservation: 先不考虑
+serve: get available count, park vehicle 
+checkout: clear spot, caculate price
+
+
+available count： 
+不能在parking lot中加入levelone_Spot这种attirbute。不extendable，会需要不停的加层数
+而是因该建立一个level类。把这个类的list或hastset作为parking lot的一个attribute
+
+park vehicle：
+parking lot checks size of the vehicle: 每一个车的类中加入size变量，getsize()
+find spot: parking lot中加入一个function list<Spot>findSportsForVehicle(Vehicle)
+建立一个vechile 来作为car，bus, motorcycle的父类。把需要被继承的变量设置为protected
+
+加入void parkvehicle(Vehicle v) ---> parking lot类
+
+take spot: 
+spot类中加入takeSpot(), leaveSpot()
+
+
+
+
+
+

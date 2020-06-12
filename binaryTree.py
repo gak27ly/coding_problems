@@ -222,12 +222,78 @@ def kthSmallest(self, root, k):
     
     return stack[-1].val
 
+
+
+
 '''
+88. Lowest Common Ancestor 
+Given the root and two nodes in a Binary Tree. Find the lowest common ancestor(LCA) of the two nodes.
+The lowest common ancestor is the node with largest depth which is the ancestor of both nodes.
+Assume two nodes are exist in tree.
+解法：因为两个node必然存在，所以直接dfs搜索这两个点然后return root
+'''
+def lowestCommonAncestor(self, root, A, B):
+    # write your code here
+    
+    lca = self.helper(root, A, B)
+    
+    return lca
+    
+def helper(self, root, A, B):
+    if not root:
+        return None
+        
+    if root == A or root == B:
+        return root
+        
+    leftLca = self.helper(root.left, A, B)
+    rightLca = self.helper(root.right, A, B)
+        
+    if leftLca and rightLca:
+        return root
+    if leftLca:
+        return leftLca
+    if rightLca:
+        return rightLca
+    return None
+
+'''
+474. Lowest Common Ancestor II
+
+Given the root and two nodes in a Binary Tree. Find the lowest common ancestor(LCA) of the two nodes.
+
+The lowest common ancestor is the node with largest depth which is the ancestor of both nodes.
+
+The node has an extra attribute parent which point to the father of itself. The root's parent is null.
+解法： 利用父节点把A的parent全部存入set(), 再找B的parent, 直到找到在set中的parent，直接返回这个parent
+'''
+
+def lowestCommonAncestorII(self, root, A, B):
+    # write your code here
+    ancestors = set()
+    
+    curr = A
+    while curr:
+        ancestors.add(curr)
+        curr = curr.parent
+    
+    curr = B
+    while curr:
+        if curr in ancestors:
+            return curr
+        curr = curr.parent
+
+
+'''
+
 578. Lowest Common Ancestor III
 
 Given the root and two nodes in a Binary Tree. Find the lowest common ancestor(LCA) of the two nodes.
 The lowest common ancestor is the node with largest depth which is the ancestor of both nodes.
 Return null if LCA does not exist.
+node A or node B may not exist in tree.
+Each node has a different value
+
 解法： 考虑返回的情况时，是否找到了node A and node B. 如果一个点找到了node A, node B， 就反回这个点作为lca.
 '''
 def lowestCommonAncestor3(self, root, A, B):
@@ -340,36 +406,72 @@ def helper(self, root):
 
 
 
-
+'''
 # Binary Tree Path Sum 
 # Your are given a binary tree in which each node contains a value. 
 # Design an algorithm to get all paths which sum to a given value. 
 # The path does not need to start or end at the root or a leaf,
 #  but it must go in a straight line down.
+解法： 通过dfs来查找每一条路径，当最后一个node sum为o时将路径计入result
+'''
 
+def binaryTreePathSum(self, root, target):
+    # write your code here
+    result = []
+    
+    self.helper(root, target, result, [], 0)
+    
+    return result
+    
+def helper(self, root, target, result, path, total):
+    if not root:
+        return
+    
+    path.append(root.val)
+    total += root.val 
+    
+    if root.left is None and root.right is None and target ==  total:
+        result.append(list(path))
+        
+    
+    self.helper(root.left, target, result, path, total)
+    self.helper(root.right, target, result, path, total)
+    
+    path.pop()
+
+'''
+Your are given a binary tree in which each node contains a value. 
+Design an algorithm to get all paths which sum to a given value. 
+The path does not need to start or end at the root or a leaf, 
+but it must go in a straight line down.
+解法： 还是使用dfs，这次不需要一个total来记录经过的path的tottal
+而是在每一次加入path时候往后倒推看新的path是否能够合成值为0的路径
+当为0时，记录下这条路径 path[i:] 加入result
+'''
 def binaryTreePathSum2(self, root, target):
     # write your code here
-    combination, res = [], []
-    self.helper(root, target, 0, combination, res)
-
-    return res
-        
-
-def helper(self, root, target, total, combination, res):
+    result = []
+    path = []
+    
+    self.helper(root, target, path, result)
+    return result
+    
+def helper(self, root, target, path, result):
     if not root:
-        return 
+        return
     
-    total += root.val
+    path.append(root.val)
+    temp = target
     
-    combination.append(root.val)
-# //只有当到leaf的时候才能加入ressult
-    if not root.left and not root.right and total == target:
-        res.append(combination[:])
-
-    self.helper(root.left, target, total, combination, res)
-    self.helper(root.right, target, total, combination, res)
-
-    combination.pop()
+    for i in range(len(path) - 1, -1, -1):
+        temp -= path[i]
+        if temp == 0:
+            result.append(path[i:])
+            
+    self.helper(root.left, target, path, result)
+    self.helper(root.right, target, path, result)
+    
+    path.pop()
 
 # 求二叉树最大深度
 
@@ -419,4 +521,8 @@ def traverse(self, root, k1, k2, result):
     
     
     if root.val < k2:
-            self.traverse(root.right, k1, k2, result)
+        self.traverse(root.right, k1, k2, result)
+
+
+
+
