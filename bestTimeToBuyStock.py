@@ -62,11 +62,11 @@ def maxProfit(self, prices):
         return 0
     n = len(prices)
     k = 2
-    tradeProfit = -sys.maxsize - 1 
     
     dp = [[0 for _ in range(n)] for _ in range(k + 1)]
 
     for i in range(1, k + 1):
+    	tradeProfit = -prices[0]
         for j in range(1, n):
             noTradeProfit = dp[i][j - 1]
             

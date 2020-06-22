@@ -1,0 +1,11 @@
+预定类 use case：
+search, select, cancle
+
+search criteria -> search() -> List<Result> -> select() -> receipt -> cancel()
+
+
+search criteria: 
+沟通需要的搜索条件
+作为search() 的input
+
+沟通result需要有哪几种result
