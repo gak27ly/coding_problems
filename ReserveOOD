@@ -9,3 +9,30 @@ search criteria:
 作为search() 的input
 
 沟通result需要有哪几种result
+
+
+1. search 
+
+a. Based on search criteria
+b. Go through all tables/rooms to check availability
+c. return a list available room types and available cout
+
++ Map<RoomType, int> handleSearchRequest(Request r)
+- boolean isRequestAvailable(Request r, List<Date> dates)
+
+
+2. make reservation
+ReservationRequest has the startDate and endDate from Request r, also has the selected roomType and room number
+
+如果这个 ReservationRequest 可以生成，则建立并返回一个 Reservation object，如果不行就throw an exception
+
++ Reservation makeReservation(ReservationRequest r)
+
+因为在搜索和确认reservation的时候都会搜索所有房间，所以可以用cache 来存之前搜索过的答案
+
+LRU(least recently used) Cache
+
+使用cache来保存搜索信息 使用hashmap -> double linked list
+
+LRUCache<Request, Map<RoomType, Set<Room>>> cache
+如果是相同的request，就能够直接返回map 中的房型和房间数量

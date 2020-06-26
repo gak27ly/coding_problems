@@ -1,0 +1,22 @@
+vending machine
+
+what? how?
+关键字，input， output
+
+vending machine：
+大小是否有限制
+item: what items to sell 
+卖完了怎么办: refill 
+payment: 多种付款方式 strategy design pattern
+
+How: 
+1. digital pad to select
+2. pyhsical button
+
+
+
+
+
+
+
+
