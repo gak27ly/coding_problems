@@ -5,7 +5,54 @@
 3. Partition类 （较多）
 '''
 
+#不对string进行去除非alnum的操作，直接在遇到的时候跳过即可
+def isPalindrome(self, s):
+    s = s.lower()
+    start, end = 0, len(s) - 1 
+    while start < end:
+        if not s[start].isalnum():
+            start += 1 
+            continue
+        if not s[end].isalnum():
+            end -= 1 
+            continue 
+        if s[start] != s[end]:
+            return False  
+        start += 1 
+        end -= 1 
+    return True
 
+
+"""
+@param s: a string
+@return bool: whether you can make s a palindrome by deleting at most one character
+解法： 想找到不相同的位置，去掉左边看右边是否是valid，或去掉右边看左边是否是valid
+"""
+def validPalindrome(self, s):
+    # Write your code here
+    l, r = 0, len(s) - 1
+    while l < r:
+        if s[l] != s[r]:
+            break
+        l += 1
+        r -= 1
+    
+    if l >= r:
+        return True
+    
+    return self.isValidPalindorme(s, l + 1, r) or self.isValidPalindorme(s, l, r - 1)
+    
+
+def isValidPalindorme(self, s, start, end):
+    while start < end:
+        if s[start] != s[end]:
+            break
+        start += 1
+        end -= 1
+    if start >= end:
+        return True
+    
+    return False
 '''
 解法1: 放入dict 加入时候计数 查询的时候看是否dict中有对应的数字
 注意如果target和对应数字数量小于2 则不能return True
