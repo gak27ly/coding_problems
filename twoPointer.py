@@ -5,7 +5,7 @@
 3. Partition类 （较多）
 '''
 
-#不对string进行去除非alnum的操作，直接在遇到的时候跳过即可
+#不对string进行去重， 如遇到非alnum的操作，直接在遇到的时候跳过即可
 def isPalindrome(self, s):
     s = s.lower()
     start, end = 0, len(s) - 1 
@@ -106,7 +106,33 @@ class TwoSum:
 	            l += 1
 	        else:
 	            r -= 1
-	    return False   
+	    return False
+'''
+不能有相同的pair 
+解法： 当发现现在的和为target时候，移动两个指针直到和上个位置不相等
+'''
+def twoSum6(self, nums, target):
+    if not nums or len(nums) < 2:
+        return 0
+
+    nums.sort()
+    
+    count = 0
+    left, right = 0, len(nums) - 1
+    
+    while left < right:
+        if nums[left] + nums[right] == target:
+            count, left, right = count + 1, left + 1, right - 1
+            while left < right and nums[left] == nums[left - 1]:
+                left += 1
+            while left < right and nums[right] == nums[right + 1]:
+                right -= 1
+        elif nums[left] + nums[right] > target:
+            right -= 1
+        else:
+            left += 1
+    
+    return count
 '''
 同向双指针
 '''
