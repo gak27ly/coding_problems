@@ -133,6 +133,34 @@ def twoSum6(self, nums, target):
             left += 1
     
     return count
+
+'''
+解法： 选定指针，直接三个数值相加打擂台.记录下最小差值的total
+'''
+def threeSumClosest(self, numbers, target):
+    # write your code here
+    
+    if not numbers or len(numbers) < 3:
+        return 0
+        
+    numbers.sort()
+    totoal, res = 0, sys.maxsize
+
+    for i in range(len(numbers) - 2):
+        start, end = i + 1, len(numbers) - 1
+        
+        while start < end:
+            total = numbers[start] + numbers[end] + numbers[i]
+            
+            if abs(total - target) < abs(res - target):
+                res = total
+            if total > target:
+                end -= 1
+            elif total < target:
+                start += 1
+            else:
+                return target
+    return res
 '''
 同向双指针
 '''
