@@ -107,29 +107,29 @@ def maxProfit(self, prices):
     return dp[k][n - 1]
 
 
-    def maxProfit(self, K, prices):
-        # write your code here
-        if not prices:
-            return 0 
+def maxProfit(self, K, prices):
+    # write your code here
+    if not prices:
+        return 0 
+    
+    n = len(prices)
+    profit = 0
+    #对于交易次数多于prices长度一半情况，只要有升值就可交易
+    if K >= n // 2:
+        for i in range(1, n):
+            if prices[i] < prices[i - 1]:
+                continue
+            profit += prices[i] - prices[i -1]
+        return profit
         
-        n = len(prices)
-        profit = 0
-        #对于交易次数多于prices长度一半情况，只要有升值就可交易
-        if K >= n // 2:
-            for i in range(1, n):
-                if prices[i] < prices[i - 1]:
-                    continue
-                profit += prices[i] - prices[i -1]
-            return profit
-            
-        dp = [[0] * n for _ in range(2)]
-        #应为只要使用到上一行的数据，所以只要用 i%2 来进行space上的优化
-        for i in range(1, K + 1):
-            maxDiff = -prices[0]
-            for j in range(1, n):
-                maxDiff = max(dp[i % 2 - 1][j - 1] - prices[j - 1], maxDiff)
-                dp[i % 2][j] = max(dp[i % 2][j - 1], prices[j] + maxDiff)
-        return dp[K % 2][n - 1]
+    dp = [[0] * n for _ in range(2)]
+    #应为只要使用到上一行的数据，所以只要用 i%2 来进行space上的优化
+    for i in range(1, K + 1):
+        maxDiff = -prices[0]
+        for j in range(1, n):
+            maxDiff = max(dp[i % 2 - 1][j - 1] - prices[j - 1], maxDiff)
+            dp[i % 2][j] = max(dp[i % 2][j - 1], prices[j] + maxDiff)
+    return dp[K % 2][n - 1]
 
 
 
