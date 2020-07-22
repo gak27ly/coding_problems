@@ -22,6 +22,7 @@ def isPalindrome(self, s):
         end -= 1 
     return True
 
+
 """
 @param s: a string
 @return bool: whether you can make s a palindrome by deleting at most one character
@@ -134,6 +135,7 @@ def twoSum6(self, nums, target):
     return count
 
 '''
+<<<<<<< HEAD
 609. Two Sum - Less than or equal to target
 Given an array of integers, find how many pairs in the array such that their 
 sum is less than or equal to a specific target number. Please return the number of pairs.
@@ -235,6 +237,9 @@ Three Sum Closest
 来进行双指针算法
 '''
 
+'''
+解法： 选定指针，直接三个数值相加打擂台.记录下最小差值的total
+'''
 def threeSumClosest(self, numbers, target):
     # write your code here
     
@@ -249,14 +254,15 @@ def threeSumClosest(self, numbers, target):
         
         while start < end:
             total = numbers[start] + numbers[end] + numbers[i]
-            if abs(total - target) < abs(res - target):
-                res = total
-            if total > target:
-                end -= 1
-            elif total < target:
-                start += 1
-            else:
-                return target
+
+        if abs(total - target) < abs(res - target):
+            res = total
+        if total > target:
+            end -= 1
+        elif total < target:
+            start += 1
+        else:
+            return target
     return res
 
 '''
@@ -397,6 +403,7 @@ def twoSum7(self, nums, target):
         	return [nums[i],nums[j]]
  
     return [-1, -1]
+    
 '''
 144. Interleaving Positive and Negative Numbers
 
@@ -433,3 +440,6 @@ def rerange(self, A):
             A[neg], A[pos] = A[pos], A[neg]
             neg += 2
             pos += 2
+
+
+

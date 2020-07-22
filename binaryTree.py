@@ -523,6 +523,67 @@ def traverse(self, root, k1, k2, result):
     if root.val < k2:
         self.traverse(root.right, k1, k2, result)
 
+'''
+468. Symmetric Binary Tree
+Given a binary tree, check whether it is a mirror of itself 
+(i.e., symmetric around its center).
 
+'''
+class Solution:
+    """
+    @param root: the root of binary tree.
+    @return: true if it is a mirror of itself, or false.
+    """
+    def isSymmetric(self, root):
+        # write your code here
+        if not root:
+            return True
+        return self.helper(root.left, root.right)
+        
+    def helper(self, node1, node2):
+        if not node1 and not node2:
+            return True
+        
+        if node1 and node2:
+            if node1.val != node2.val:
+                return False
+            
+            if self.helper(node1.left, node2.right) and self.helper(node1.right, node2.left):
+                return True
+        return False
+#BFS 在每一层用双指针检查是否对称
+def isSymmetric(self, root):
+    # write your code here
+    if not root:
+        return True
+    
+    queue = collections.deque([root])
+    while queue:
+        # get all nodes in next level
+        size = len(queue)
+        tmp = []
+        for _ in range(size):
+            node = queue.popleft()
+            tmp.append(node)
+            if node:
+                queue.append(node.left)
+                queue.append(node.right)
+        
+        # curr level nodes gone, only next level nodes stays
+        
+        # check for symmetric
+        if not self.is_symmetric(tmp):
+            return False
+        
+    return True
 
-
+def is_symmetric(self, arr):
+    n = len(arr)
+    l, r = 0, n - 1
+    while l < r:
+        if (arr[l] is not None and arr[r] is not None and arr[l].val == arr[r].val) \
+        or (arr[l] is None and arr[r] is None):
+            l, r = l + 1, r - 1
+        else:
+            return False
+    return True
