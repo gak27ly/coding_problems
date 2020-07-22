@@ -16,7 +16,7 @@ search criteria:
 a. Based on search criteria
 b. Go through all tables/rooms to check availability
 c. return a list available room types and available count
-
+ 
 + Map<RoomType, int> handleSearchRequest(Request r)
 - boolean isRequestAvailable(Request r, List<Date> dates)
 

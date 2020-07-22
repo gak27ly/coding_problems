@@ -57,6 +57,53 @@ def merge(myList, left, right):
         j += 1
         k += 1
 
+def sortIntegers2(self, A):
+    # write your code here
+    	n = len(A)
+        temp = [0] * n
+        mergeSort(A, 0, n - 1, temp)
+	    
+def mergeSort(nums, start, end, temp):
+	if start >= end:
+	    return 
+	
+	mid = (start + end) // 2
+	mergeSort(nums, start, mid, temp)
+	mergeSort(nums, mid + 1, end, temp)
+	merge(nums, start, end, temp)
+
+def merge(nums, start, end, temp):
+	mid = (start + end) // 2
+	i, j  = start, mid + 1
+	index = start
+
+	while i <= mid and j <= end:
+		if nums[i] < nums[j]:
+			temp[index] = nums[i]
+			i += 1
+			index += 1
+		else:
+			temp[index] = nums[j]
+			j += 1
+			index += 1
+	while i <= mid:
+		temp[index] = nums[i]
+		index += 1
+		i += 1
+	while j <= end:
+		temp[index] = nums[j]
+		index += 1
+		j += 1
+		
+	for i in range(start, end + 1):
+	    nums[i] = temp[i]
+
+
+
+
+
+
+
 '''
 partition method：让以后一个数字作为pivot，使用 k = start 作为小于pivot的数的位置坐标
 然后在当前数组 i in range(start, end) 把所有小于pivot的数字交换到位置k。最后把pivot交换到位置k
@@ -75,7 +122,7 @@ def quickSort1(A, start, end):
 		quickSort1(A, pi + 1, end)
 
 def partition(A, start, end):
-	pivot = A[end]
+	pivot = A[end] 
 	k = start
 
 	for i in range(start, end):
@@ -85,6 +132,29 @@ def partition(A, start, end):
 
 	A[k], A[end] = A[end], A[k]	
 	return k
+
+
+def quickSort(A):
+	self.quickSort1(A, 0, len(A) - 1)
+
+def quickSort1(self, nums, start, end):
+	left, right = start, end
+	pivot = nums[(start + end) // 2]
+
+	while left <= right:
+		while left <= right and nums[left] < pivot:
+			left += 1
+		while left <= right and nums[right] > pivot:
+			right -= 1
+		if left <= right:
+			nums[left], nums[right] = nums[right], nums[left]
+			left += 1
+			right -= 1
+
+	self.quickSort1(nums, start, right)
+	self.quickSort1(nums, left, end)
+
+
 
 
 '''
