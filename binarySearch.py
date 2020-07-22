@@ -108,7 +108,27 @@ def leftClose(self, left, right, target, A):
             return True
     
     return False
+
+'''
+find mountain peak
+解法：只要对面前面一个index就能知道当前是否是在升序中
+'''
+def peakIndexInMountainArray(self, A):
+    # Write your code here
+    start, end = 0, len(A)
+    
+    while start + 1 < end:
+        mid = (start + end) // 2
         
+        if A[mid] > A[mid - 1]:
+            start = mid
+        elif A[mid] < A[mid - 1]:
+            end = mid
+        
+    if A[start] > A[end]:
+        return start
+    else:
+        return end
         
         
         
