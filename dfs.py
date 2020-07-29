@@ -171,5 +171,36 @@ def dfs(s, decode, res):
 print(numDecodings("105"))
 
 
+'''
+90. k Sum II
+Given n unique postive integers, number k (1<=k<=n) and target.
+Find all possible k integers where their sum is target.
+注意点： 此题没有去重的问题, 题目默认已经排好序。 在pathSum 基础上添加了k这个条件
+实际就是求所有组合中长度是k并满足sum是target的组合
+'''
+def kSumII(self, A, k, target):
+    # write your code here
+    if len(A) < k:
+        return []
+    res = []
+    
+    self.helper(A, k, 0, target, [], res)
+    return res
+
+def helper(self, A, k, start, target, combination, res):
+    if len(combination) > k:
+        return 
+    
+    if target < 0:
+        return
+    
+    if len(combination) == k and target == 0:
+        res.append(list(combination))
+        return
+    
+    for i in range(start, len(A)):
+        combination.append(A[i])
+        self.helper(A, k, i + 1, target - A[i], combination, res)
+        combination.pop()
 
 
