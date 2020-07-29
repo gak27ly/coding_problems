@@ -24,10 +24,9 @@ def helper(self, nums, combination, res):
         combination.append(prefix)
         self.helper(nums[i + 1 :], combination, res)
         combination.pop()
-
 '''
 使用index来标记当前数字，节省空间
-出错处：在helper中使用了index导致出错，应该使用i
+出错处：在helper中使用了index + 1导致出错，应该使用i + 1
 '''
 
 def subsets(self, nums):
@@ -51,7 +50,6 @@ def helper(self, nums, index, combination, res):
 
 '''
 Permutations II
-
 Given a list of numbers with duplicate number in it. 
 Find all unique permutations.
 解法：利用visited来判断是否该数字已经取过了
@@ -132,7 +130,6 @@ print(longestIncreasingPath(A))
 
 '''
 512. Decode Ways
-中文English
 A message containing letters from A-Z is being 
 encoded to numbers using the following mapping:
 'A' -> 1
