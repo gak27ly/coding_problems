@@ -221,5 +221,143 @@ def findPeak(self, A):
         return end
     else:
         return start
-            
 
+
+'''
+Given n pieces of wood with length L[i] (integer array). 
+Cut them into small pieces to guarantee you could have equal 
+or more than k pieces with the same length. What is the longest
+ length you can get from the n pieces of wood? Given L & k, return the maximum length of the small pieces.
+ 解法： 确定答案范围在1-maxLengh中，对这段范围进行二分，若不能在某一值的到至少k段，
+ 则只需要在这个值左边的范围进行查找。
+'''
+def woodCut(self, L, k):
+    # write your code here
+    if not L:
+        return 0
+    maxLength = max(L)
+    
+    start, end = 1, maxLength
+    
+    while start + 1 < end:
+        mid = (start + end ) // 2
+        
+        count = self.getPieces(mid, L)
+        if count < k:
+            end = mid
+        elif count >= k:
+            start = mid
+    
+    if self.getPieces(end, L) >= k:
+        return end
+    
+    if self.getPieces(start, L) >= k:
+        return start
+    
+    return 0
+
+def getPieces(self, length, L):
+    count = 0
+    for i in range(len(L)):
+        count += L[i] // length
+    return count
+
+
+"""
+28. Search a 2D Matrix
+@param matrix: matrix, a list of lists of integers
+@param target: An integer
+@return: a boolean, indicate whether matrix contains target
+解法：先二分找到正确的row，再进行二分找到数字
+"""
+def searchMatrix(self, matrix, target):
+    # write your code here
+    if not matrix:
+        return False
+        
+    n = len(matrix)
+    m = len(matrix[0])
+    
+    start, end = 0, n - 1
+    row = 0
+    while start + 1 < end:
+        mid = (start + end) // 2
+        if matrix[mid][0] > target:
+            end = mid
+        elif matrix[mid][0] < target:
+            start = mid
+        else:
+            return True
+    
+    if matrix[end][0] <= target:
+        row = end
+    elif matrix[start][0] <= target:
+        row = start
+    
+    return self.binarySearch(matrix[row], target)
+    
+def binarySearch(self, row, target):
+    start, end = 0, len(row) - 1
+    while start + 1 < end:
+        mid = (start + end) // 2
+        if row[mid] > target:
+            end = mid
+        elif row[mid] < target:
+            start = mid
+        else:
+            return True
+    
+    if row[start] == target or row[end] == target:
+        return True
+    return False
+
+
+
+
+"""
+61. Search for a Range
+
+Given a sorted array of n integers, find the 
+starting and ending position of a given target value.
+If the target is not found in the array, return [-1, -1].
+    @param A: an integer sorted array
+    @return: a list of length 2, [index1, index2]
+解法：两次二分法去找第一个和最后一个
+"""
+def searchRange(self, A, target):
+    # write your code here
+    if not A:
+        return [-1, -1]
+        
+    start, end = 0, len(A) - 1
+    head, tail = 0, 0
+    
+    while start + 1 < end:
+        mid = (start + end) // 2
+        if A[mid] >= target:
+            end = mid
+        else:
+            start = mid
+    
+    if A[start] == target:
+        head = start
+    elif A[end] == target:
+        head = end
+    else:
+        return [-1, -1]
+    
+    start, end  = head, len(A) - 1
+    
+    while start + 1 < end:
+        mid = (start + end) // 2
+        if A[mid] <= target:
+            start = mid
+        else:
+            end = mid
+    if A[end] == target:
+        tail = end
+    else:
+        tail = start
+    
+    return [head, tail]
+        
