@@ -85,6 +85,64 @@ def helper(self, nums, visited, premutation, res):
         visited[i] = False
 
 
+"""
+求当前permutation是从小到大第几个permutation
+@param A: An array of integers
+@return: A long integer
+注意点： 从后往前来积累factorial的数值
+"""
+def permutationIndex(self, A):
+    # write your code here
+    if not A:
+        return 1
+    n = len(A)
+    fact = 1
+    index = 0
+    
+    for i in range(n - 1, -1, -1):
+        count = 0
+        for j in range(i + 1, n):
+            if A[j] < A[i]:
+                count += 1
+        index += count * fact    
+        fact *= n - i
+    
+    return index + 1
+'''
+求当前permutation是从小到大第几个permutation
+数组含有重复元素
+解法： 利用repeat 这个hashmap来记录从后往前有多少重复元素，并记录他们的乘积
+计算当前位置的排列数时除以当前重复元素数量的factorial
+
+'''
+def permutationIndexII(self, A):
+    # write your code here
+    
+    if not A:
+        return 1
+    n = len(A)
+    index = 0
+    fact = 1
+    repeat = {}
+    repeatFact = 1
+    
+    for i in range(n - 1, -1, -1):
+        if A[i] in repeat:
+            repeat[A[i]] += 1
+        else:
+            repeat[A[i]] = 1
+            
+        repeatFact *= repeat[A[i]]
+        
+        smaller = 0
+        for j in range(i + 1, n):
+            if A[j] < A[i]:
+                smaller += 1
+        
+        index += smaller * fact // repeatFact
+        fact *= (n - i)
+        
+    return index + 1
 
 
 
@@ -202,5 +260,10 @@ def helper(self, A, k, start, target, combination, res):
         combination.append(A[i])
         self.helper(A, k, i + 1, target - A[i], combination, res)
         combination.pop()
+
+
+        
+
+
 
 
