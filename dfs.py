@@ -202,5 +202,230 @@ def helper(self, A, k, start, target, combination, res):
         combination.append(A[i])
         self.helper(A, k, i + 1, target - A[i], combination, res)
         combination.pop()
+'''
+33. N-Queens
+中文English
+The n-queens puzzle is the problem of placing n queens on an n×n chessboard 
+such that no two queens attack each other(Any two queens can't be in the same row, column, diagonal line).
+Given an integer n, return all distinct solutions to the n-queens puzzle.
+Each solution contains a distinct board configuration of the n-queens' placement, 
+where 'Q' and '.' each indicate a queen and an empty space respectively.
+解法：在每一行做cols个选择，是否放在这一列。
+利用一个colplacement list，每个位置代表当前那一行所选取的列.
+'''
 
+def solveNQueens(self, n):
+    # write your code here
+    
+    if not n:
+        return []
+    res = []
+    colPlacement = []
+    self.helper(n, colPlacement, 0, res)
+
+    return res
+
+def helper(self, n, colPlacement, row, res):
+    if len(colPlacement) == n:
+        rows = self.draw(colPlacement)
+        res.append(rows)
+        return 
+    
+    for col in range(n):
+        colPlacement.append(col)
+        if self.isValid(colPlacement):
+            self.helper(n, colPlacement, row + 1, res)
+        colPlacement.pop()
+    
+
+def isValid(self, colPlacement):
+    row = len(colPlacement) - 1
+    col = colPlacement[row]
+    
+    for i in range(len(colPlacement) - 1):
+        j = colPlacement[i]
+        if j == col:
+            return False
+        if abs(j - col) / abs(i - row) == 1:
+            return False
+        
+    return True
+        
+def draw(self, colPlacement):
+    board = []
+    for i in range(len(colPlacement)):
+        colNum = colPlacement[i]
+        row = ""
+        for j in range(len(colPlacement)):
+            if colNum != j:
+                row += "."
+            else:
+                row += "Q"
+        board.append(row)
+    return board
+
+'''
+52. Next Permutation
+Given a list of integers, which denote a permutation.
+Find the next permutation in ascending order.
+解法： 找到下一个排列
+首先从后向前找到一个不是递增的位置i，把这个位置与从后往前第一个比它大的数交换位置。
+然后对i+1 到 n-1 排序。（因为是从后向前递增，所以双指针不断交换首尾位置也能得到i+1后最小的排列）
+'''
+def nextPermutation(self, nums):
+    # write your code here
+    if not nums:
+        return []
+        
+    n = len(nums)
+    
+    i = n - 1
+    while i > 0 and nums[i] <= nums[i - 1]:
+        i -= 1
+    
+    if i != 0:
+        j = n -1
+        while j > i - 1 and nums[j] <= nums[i - 1]:
+            j -= 1
+    
+        nums[i - 1], nums[j] = nums[j], nums[i - 1]
+    
+    nums[i:] = sorted(nums[i:])
+    
+    return nums
+
+'''
+有重复元素：
+
+'''
+def nextPermutation(self, nums):
+    # write your code here
+    if not nums:
+        return None
+    n = len(nums)
+    if n == 1:
+        return nums
+    
+    i = n - 1
+    
+    while i > 0 and nums[i] <= nums[i - 1]:
+        i -= 1
+        
+    j = n - 1
+    if i > 0:
+        while j > i and nums[j] <= nums[i - 1]:
+            j -= 1
+    
+    nums[i - 1], nums[j] = nums[j], nums[i - 1]
+    
+    
+    nums[i:] = nums[i:][::-1]    
+    return nums
+
+'''
+197. Permutation Index
+Given a permutation which contains no repeated number, 
+find its index in all the permutations of these numbers, 
+which are ordered in lexicographical order. The index begins at 1.
+从后向前，选取坐标位置，看右边有多少数字比坐标数字小 smaller， 用smaller * 坐标右边位置的阶乘
+通过从后向前的方法，可以记录下阶乘 fact *= n - i
+'''
+def permutationIndex(self, A):
+    # write your code here
+    
+    if not A:
+        return 1
+    
+    n = len(A)
+    
+    fact = 1
+    perIndex = 0
+    
+    for i in range(n - 1, -1, -1):
+        pivot = A[i]
+        smaller = 0
+        for j in range(n - 1, i, -1):
+            if A[j] < pivot:
+                smaller += 1
+        perIndex += smaller * fact
+        fact *= n - i    
+    
+    return perIndex + 1
+
+
+'''
+含有重复元素的permutation Index
+利用hashmap来记录当前位置的重复元素数量
+'''
+def permutationIndexII(self, A):
+    # write your code here
+    
+    if not A:
+        return 1
+    n = len(A)
+    index = 0
+    fact = 1
+    repeat = {}
+    repeatFact = 1
+    
+    for i in range(n - 1, -1, -1):
+        if A[i] in repeat:
+            repeat[A[i]] += 1
+        else:
+            repeat[A[i]] = 1
+            
+        repeatFact *= repeat[A[i]]
+        
+        smaller = 0
+        for j in range(i + 1, n):
+            if A[j] < A[i]:
+                smaller += 1
+        
+        index += smaller * fact // repeatFact
+        fact *= (n - i)
+        
+    return index + 1
+
+'''
+425. Letter Combinations of a Phone Number
+
+Given a digit string excluded 0 and 1, return all possible letter 
+combinations that the number could represent.
+注意点： 其实就是长度为len(digits)的全组合
+错误点： 因为是从digits中往下选，startindex代表当前的digit，
+在mapping[digits[startIndex]]中选择一个char加入subset
+然后再在下一个数字对应的字母中查找。
+'''
+
+def letterCombinations(self, digits):
+    # write your code here
+    
+    if not digits:
+        return []
+    
+    res = []
+    self.helper(digits, 0, [], res)
+    
+    return res
+
+def helper(self, digits, startIndex, subset, res):
+    mapping = {
+                "2" : "ABC",
+                "3" : "DEF",
+                "4" : "GHI",
+                "5" : "JKL",
+                "6" : "MNO",
+                "7" : "PQRS",
+                "8" : "TUV",
+                "9" : "WXYZ"
+                }
+                
+    if len(subset) == len(digits):
+        res.append("".join(subset))
+        return 
+    
+    for ch in mapping[digits[startIndex]]:
+        subset.append(ch.lower())
+        self.helper(digits, startIndex + 1, subset, res)
+        subset.pop()
 
