@@ -429,3 +429,63 @@ def helper(self, digits, startIndex, subset, res):
         self.helper(digits, startIndex + 1, subset, res)
         subset.pop()
 
+
+
+'''
+house robberII
+做两遍dp，从第一个到倒数第二个，从第二个到最后一个.
+'''
+
+def rob(self, nums: List[int]) -> int:
+    if not nums:
+        return 0
+    n = len(nums)
+    if n <= 2:
+        return max(nums)
+    dp = [0 for _ in range(n)]
+
+    
+    dp[0] = nums[0]
+    dp[1] = max(dp[0], nums[1])
+    
+    for i in range(2, n - 1):
+        dp[i] = max(dp[i - 2] + nums[i], dp[i - 1])
+    
+    mostAmount = dp[n - 2]
+    
+    dp[1] = nums[1]
+    dp[2] = max(dp[1], nums[2])
+    for i in range(3, n):
+        dp[i] = max(dp[i - 2] + nums[i], dp[i - 1])
+    
+    return max(dp[n - 1], mostAmount)
+
+'''
+535. House Robber III
+The thief has found himself a new place for his thievery again. There is only one entrance to this area, called the "root."
+ Besides the root, each house has one and only one parent house. After a tour, the smart thief realized that 
+ "all houses in this place forms a binary tree". It will automatically contact the police if two directly-linked houses 
+ were broken into on the same night.
+解法： 使用递归，每个点有两个状态，抢或者不抢。 抢就是当前root.val + leftNoRoot + rightNoRoot
+不抢就是 max(left.noRoot, leftRoot) + max(rightRoot + rightNoRoot)
+'''
+def houseRobber3(self, root):
+    # write your code here
+    if not root:
+        return 0
+    
+    roob, noRoob = self.helper(root)
+    return max(roob, noRoob)
+    
+    
+def helper(self, root):
+    if not root:
+        return 0, 0
+    
+    left = self.helper(root.left)
+    right = self.helper(root.right)
+    
+    roob = root.val + left[0] + right[0]
+    noRoob = max(left[0], left[1]) + max(right[0], right[1])
+    
+    return noRoob, roob
