@@ -110,29 +110,6 @@ partition method：让以后一个数字作为pivot，使用 k = start 作为小
 这样 start 到 k-1 都小于pivot， k+1到end都大于pivot
 利用recursion来sort start - k-1， k+1 - end
 '''
-def quickSort(A):
-	quickSort1(A, 0, len(A) - 1)
-
-
-def quickSort1(A, start, end):
-	pivot = A[end]
-	if start < end:
-		pi = partition(A, start, end)
-		quickSort1(A, start, pi - 1)
-		quickSort1(A, pi + 1, end)
-
-def partition(A, start, end):
-	pivot = A[end] 
-	k = start
-
-	for i in range(start, end):
-		if A[i] < pivot:
-			A[i], A[k] = A[k], A[i]
-			k += 1
-
-	A[k], A[end] = A[end], A[k]	
-	return k
-
 
 def quickSort(A):
 	self.quickSort1(A, 0, len(A) - 1)
@@ -154,8 +131,34 @@ def quickSort1(self, nums, start, end):
 	self.quickSort1(nums, start, right)
 	self.quickSort1(nums, left, end)
 
-
-
+'''
+quick select: first k largest
+注意点： 为保证right在left左边 while loop要采用 left<=right
+'''
+def quick_select(nums, start, end, k):
+        if start == end:
+            return nums[k]
+        
+        left, right = start, end
+        while left <= right:
+            pivot = nums[(left+right)//2]
+            while left <= right and nums[left]>pivot:
+                left+=1
+            while left <= right and nums[right]<pivot:
+                right-=1
+            if left <= right:
+                nums[left], nums[right] = nums[right], nums[left]
+                left+=1
+                right-=1
+        """
+        start right left end
+        """
+        if k <= right:
+            quick_select(nums, start, right, k)
+        if k > left:
+            quick_select(nums, left, end, k)
+        return nums[k]
+        
 
 '''
 selection sort

@@ -487,8 +487,69 @@ def helper(self, digits, startIndex, subset, res):
         self.helper(digits, startIndex + 1, subset, res)
         subset.pop()
 
+'''
+570. Find the Missing Number II
+Giving a string with number from 1-n in random order, 
+but miss 1 number.Find that number.
+注意点： 当取到0时，直接return
+'''       
+
+def findMissing2(self, n, str):
+    # write your code here
+    if not n:
+        return None
+    res = []
+    
+    self.helper(n, 0, [], res, str)
+    print(res)
+    for num in range(1, n + 1):
+        if num not in res[0]:
+            return num
         
+def helper(self, n, start, path, res, str):
+    if start == len(str):
+        res.append(path[:])
+    
+    for i in range(1, 3):
+        if start + i > len(str):
+            return
+        prefix = int(str[start : start + i])
+        if prefix == 0:
+            return 
+        
+        if prefix >= 1 and prefix <= n and prefix not in path:
+            path.append(prefix)
+            self.helper(n, start + i, path, res, str)
+            path.pop()
+
+'''
+652. Factorization
+A non-negative numbers can be regarded as product of its factors.
+Write a function that takes an integer n and 
+return all possible combinations of its factors.
+'''
+def getFactors(self, n):
+    # write your code here
+
+    start = 2
+    res = []
+    self.helper(n, start, [], res)
+    
+    return res
 
 
+
+def helper(self, n, start, combination, res):
+    if len(combination) != 0:
+        res.append(combination[:] + [n])
+        
+    
+    for i in range(start, int(math.sqrt(n)) + 1):
+        if n % i != 0:
+            continue
+
+        combination.append(i)
+        self.helper(n // i, i, combination, res)
+        combination.pop()
 
 

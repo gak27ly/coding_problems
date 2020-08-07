@@ -1,0 +1,20 @@
+def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
+    
+    cur = head
+    count = 0
+    dummy = ListNode(0)
+    dummy.next = head 
+    pre = dummy
+    
+    for _ in range(m - 1):
+        pre = pre.next
+        
+    cur = pre.next
+    
+    for _ in range(n - m):
+        next = cur.next
+        cur.next = next.next
+        next.next = pre.next
+        pre.next = next
+    
+    return dummy.next
