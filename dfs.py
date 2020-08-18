@@ -487,7 +487,6 @@ def helper(self, digits, startIndex, subset, res):
         self.helper(digits, startIndex + 1, subset, res)
         subset.pop()
 
-<<<<<<< HEAD
 '''
 570. Find the Missing Number II
 Giving a string with number from 1-n in random order, 
@@ -554,9 +553,6 @@ def helper(self, n, start, combination, res):
         combination.pop()
 
 
-=======
-
-
 '''
 house robberII
 做两遍dp，从第一个到倒数第二个，从第二个到最后一个.
@@ -615,4 +611,3 @@ def helper(self, root):
     noRoob = max(left[0], left[1]) + max(right[0], right[1])
     
     return noRoob, roob
->>>>>>> dc2ff96d8cba96c5dd5030142e3077372173b270

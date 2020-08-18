@@ -135,7 +135,6 @@ def twoSum6(self, nums, target):
     return count
 
 '''
-<<<<<<< HEAD
 609. Two Sum - Less than or equal to target
 Given an array of integers, find how many pairs in the array such that their 
 sum is less than or equal to a specific target number. Please return the number of pairs.
