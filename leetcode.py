@@ -1,4 +1,7 @@
-leetcode 
+#leetcode 
+# 1, 2, 3, 5, 6, 7, 9, 11, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 26, 27, 
+# 28, 29, 31, 33, 34, 35, 36, 38, 39, 40, 41, 43, 46, 47, 48 
+
 '''
 15. 3Sum
 错误处1： 选择一个固定数字时没有对接下来2sum的范围进行规定。
@@ -225,3 +228,92 @@ def searchRange(self, nums: List[int], target: int) -> List[int]:
         return [-1, -1]
     
     return [first, last]
+
+
+'''
+41. First Missing Positive
+数字范围1 - n， 找到唯一的重复数字
+利用array的特点， 把存在的数字对应的index位置的数值改为负值
+找到第一个非负的值，返回其index + 1
+'''
+
+def firstMissingPositive(self, nums: List[int]) -> int:
+    flag = False
+    for i in range(len(nums)):
+        if nums[i] == 1:
+            flag = True
+    
+    if not flag:
+        return 1
+    
+    for i in range(len(nums)):
+        if nums[i] <= 0:
+            nums[i] = 1
+    
+    for i in range(len(nums)):
+        if abs(nums[i]) > len(nums):
+            continue
+        if abs(nums[i]) == len(nums):
+            nums[0] = -abs(nums[0])
+        else:
+            nums[abs(nums[i])] = -abs(nums[abs(nums[i])])
+        
+    print(nums)
+    for i in range(1, len(nums)):
+        if nums[i] > 0:
+            return i
+    
+    if nums[0] > 0:
+        return len(nums)
+    
+    return len(nums) + 1
+
+
+'''
+43. Multiply Strings
+
+建立长度为 n + m 的array，使用array的位置来模拟并存储乘法的结果
+'''
+
+def multiply(self, num1: str, num2: str) -> str:
+    res = [0] * (len(num1) + len(num2))
+    
+    for i in range(len(num1) - 1, -1, -1):
+        for j in range(len(num2) - 1, -1, -1):
+            x = ord(num2[j]) - ord('0') 
+            y = ord(num1[i]) - ord('0')
+            
+            res[i + j], res[i + j + 1] = (res[i + j] * 10 + res[i + j + 1] + x * y) // 10,  (res[i + j + 1] + x * y) % 10
+                         
+    while res[0] == 0 and len(res) > 1:
+        res.pop(0)
+            
+    for i in range(len(res)):
+        res[i] = chr(res[i] + 48)
+    return "".join(res)
+
+
+'''
+48. Rotate Image
+将行变成列，然后把列的位置进行调整
+不管是向左还是向右旋转90度，都会导致每一行变成列。
+'''
+def rotate(self, matrix: List[List[int]]) -> None:
+    """
+    Do not return anything, modify matrix in-place instead.
+    """
+    n, m = len(matrix), len(matrix[0])
+    
+    for i in range(n): 
+        for j in range(i , m):
+            matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+            
+    for i in range(n):
+        start, end = 0, len(matrix[0]) - 1
+        while start < end:
+            
+            matrix[i][start], matrix[i][end] = matrix[i][end], matrix[i][start]
+            start += 1
+            end -= 1
+    
+    return matrix
