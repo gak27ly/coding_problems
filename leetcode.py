@@ -3,6 +3,12 @@
 # 28, 29, 31, 33, 34, 35, 36, 38, 39, 40, 41, 43, 46, 47, 48 
 
 '''
+需重做： 6, 5, 19, 20, 22, 23, 
+26 -48
+'''
+
+
+'''
 15. 3Sum
 错误处1： 选择一个固定数字时没有对接下来2sum的范围进行规定。
 因该是规定在i + 1 到len(nums)的范围内进行查找，否则答案中会有重复 [[-1, 0 ,1], [0, -1, 1]]
@@ -317,3 +323,86 @@ def rotate(self, matrix: List[List[int]]) -> None:
             end -= 1
     
     return matrix
+
+'''
+49. Group Anagrams
+解法： 利用dafalutdict 
+把每个单词sorted成一个list后一tuple的形式作为key存入dict，把这单词append到这个key下的list中
+mapping.values()就是所有存入的单词的集合
+'''
+def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+    
+    if not strs or len(strs) == 0:
+        return [[]]
+    
+    mapping = collections.defaultdict(list)
+    
+    for chars in strs:
+        mapping[tuple(sorted(chars))].append(chars)
+    
+    return mapping.values()
+
+'''
+50. Pow(x, n)
+解法： 当n为奇数时，将当前base * res 来保证不会少乘
+然后继续对base进行倍增 知道n为1
+'''
+def myPow(self, x: float, n: int) -> float:
+    if x == 0 or n == 0:
+        return 1
+    
+    if n < 0:
+        x = 1 / x
+        n = -n
+    res = 1
+    num = x
+    
+    while n > 1:
+        if n % 2 == 1:
+            res *= num
+
+        num = num * num
+        n = n // 2 
+        
+    res *= num
+    return res
+
+'''
+54. Spiral Matrix
+确定上下左右边界，和方向坐标，通过缩小上下左右范围和改变方向来遍历所有的点。
+'''
+
+'''
+55. Jump Game 
+贪心算法， 看n-2的位置能不能跳到 n-1，如果可以看接着向前看从哪能跳到n-2
+'''
+'''
+56. Merge Intervals
+排序后判断是否overlap，有的话扩展右边界， 没有就加入答案.
+'''
+def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+    if not intervals or len(intervals) == 0:
+        return []
+    intervals = sorted(intervals, key = lambda x : x[0])
+    res = []
+    
+    left = intervals[0][0]
+    right = intervals[0][1]
+    
+    print(intervals)
+    for i in range(1, len(intervals)):
+        
+        if right < intervals[i][0]:
+            res.append([left, right])
+            left = intervals[i][0]
+            right = intervals[i][1]
+        else:
+            right = max(intervals[i][1], right)
+            
+    res.append([left, right])
+    
+    return res
+'''
+58. Length of Last Word
+找到最后一个char的位置，再找最后一个space的位置，注意找不到这个位置的情况。
+'''
