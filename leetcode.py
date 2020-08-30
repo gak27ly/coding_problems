@@ -406,3 +406,300 @@ def merge(self, intervals: List[List[int]]) -> List[List[int]]:
 58. Length of Last Word
 找到最后一个char的位置，再找最后一个space的位置，注意找不到这个位置的情况。
 '''
+
+'''
+62. Unique Paths
+'''
+def uniquePaths(self, m: int, n: int) -> int:
+    
+    dp = [[0 for _ in range(m)] for _ in range(2)]
+    
+    for i in range(n):
+        for j in range(m):
+            if i == 0 or j == 0:
+                dp[i % 2][j] = 1
+            else:
+                dp[i % 2][j] = dp[i % 2 - 1][j] + dp[i % 2][j - 1]
+                
+    return dp[n % 2 - 1][m - 1]
+'''
+63. Unique Paths
+先把第一行第一列进行预处理.
+'''
+
+'''
+64. Minimum Path Sum
+dp 对第一行第一列进行预处理.
+'''
+def minPathSum(self, grid: List[List[int]]) -> int:
+    if not grid:
+        return 0
+    
+    n = len(grid)
+    m = len(grid[0])
+    
+    dp = [[0 for _ in range(m)] for _ in range(n)]
+    dp[0][0] = grid[0][0]
+    
+    for row in range(1, n):
+        dp[row][0] = grid[row][0] + dp[row - 1][0]
+    
+    for col in range(1, m):
+        dp[0][col] = grid[0][col] + dp[0][col - 1]
+    
+    for i in range(1, n):
+        for j in range(1, m):
+            dp[i][j] = grid[i][j] + min(dp[i - 1][j], dp[i][j - 1])
+    
+    return dp[n - 1][m - 1]
+
+#利用滚动数字减少空间复杂度， 预处理第一行即可
+def minPathSum(self, grid: List[List[int]]) -> int:
+    if not grid:
+        return 0
+    
+    n = len(grid)
+    m = len(grid[0])
+    
+    dp = [[0 for _ in range(m)] for _ in range(2)]
+    dp[0][0] = grid[0][0]
+    
+    
+    for col in range(1, m):
+        dp[0][col] = grid[0][col] + dp[0][col - 1]
+    
+    for i in range(1, n):
+        for j in range(m):
+            if j > 0:
+                dp[i % 2][j] = grid[i][j] + min(dp[(i - 1) % 2][j], dp[i % 2][j - 1])
+            else:
+                dp[i % 2][j] = grid[i][j] + dp[(i - 1) % 2][j]
+    # print(dp)
+    return dp[(n - 1) % 2][m - 1]
+'''
+67. Add Binary
+错误点：循环开头要把carry赋值给total而不是累加到total
+'''
+def addBinary(self, a: str, b: str) -> str:
+
+    res = 0
+    i, j = len(a) - 1, len(b) - 1 
+    carry = 0
+    
+    total = 0
+    res = ""
+    while i >= 0 or j >= 0:
+        total = carry
+        if i >=0:
+            total += int(a[i])
+        if j >=0:
+            total += int(b[j])
+        res += str(total % 2)
+        carry = total // 2
+        i -= 1
+        j -= 1
+        
+    if carry == 1:
+        res += str(carry)
+        
+    return res[::-1]
+
+'''
+69. Sqrt(x)
+binary search
+找到第一个在 1-x/2范围内 n ** 2 小于等于x的数
+注意x = 0，1 的特殊情况
+'''
+
+'''
+70. Climbing Stairs
+注意 input为0， 1的边界情况
+'''
+
+'''
+73. Set Matrix Zeroes
+从 1，1开始遍历并利用第一行和第一列的值来标记该行该列是否应该被改为0
+对第一行和第一列单独进行遍历，并用两个变量来记录其是否为0
+注意点：先对除了第一行第一列的行和列进行变化，然后再变化第一行第一列
+否则会改变正确的标记
+'''
+
+def setZeroes(self, matrix: List[List[int]]) -> None:
+    """
+    Do not return anything, modify matrix in-place instead.
+    """
+    if not matrix or len(matrix) == 0:
+        return matrix
+    
+    n = len(matrix)
+    m = len(matrix[0])
+    
+    firstRow = False
+    firstCol = False
+    
+    for row in range(n):
+        if matrix[row][0] == 0:
+            firstCol = True
+            break
+    
+    for col in range(m):
+        if matrix[0][col] == 0:
+            firstRow = True
+            break
+    
+    for i in range(1, n):
+        for j in range(1, m):
+            if matrix[i][j] != 0:
+                continue
+            matrix[0][j] = 0
+            matrix[i][0] = 0
+
+    #根据上面的标记对 1- n-1行进行改变
+    for row in range(1, n):
+        if matrix[row][0] != 0:
+            continue
+        for col in range(m):
+            matrix[row][col] = 0
+
+    #根据上面的标记对 1- m-1列进行改变
+    for col in range(1, m):
+        if matrix[0][col] != 0:
+            continue
+        for row in range(n):
+            matrix[row][col] = 0
+            
+    if firstRow == True:
+        for col in range(m):
+            matrix[0][col] = 0
+
+    if firstCol == True:
+        for row in range(n):
+            matrix[row][0] = 0
+
+    return matrix
+
+'''
+74. Search a 2D Matrix
+利用两个binary search
+错误点：没有考虑到[[]] 的边界条件, 
+第一个binary search结束时，没考虑matrix[end][0] == target的情况
+'''
+def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+    if not matrix or len(matrix) == 0 or len(matrix[0]) == 0:
+        return False
+
+    
+    n = len(matrix)
+    m = len(matrix[0])
+    
+    start, end = 0, n - 1
+    
+    while start + 1 < end:
+        mid = start + (end - start) // 2
+        if matrix[mid][0] > target:
+            end = mid
+        elif matrix[mid][0] < target:
+            start = mid
+        else:
+            return True
+    
+    if matrix[end][0] <= target:
+        return self.searchRow(matrix, end, target)
+    else:
+        return self.searchRow(matrix, start, target)
+     
+def searchRow(self, matrix, row, target):
+    start, end = 0, len(matrix[row]) - 1
+    
+    while start + 1 < end:
+        mid = start + (end - start) // 2
+        if matrix[row][mid] > target:
+            end = mid
+        elif matrix[row][mid] < target:
+            start = mid
+        else:
+            return True
+    
+    if matrix[row][start] == target:
+        return True
+    if matrix[row][end] == target:
+        return True
+    return False
+
+'''
+75. Sort Colors
+错误点：left pointer的点不会丢给middle一个为0的点，
+但需要考虑right pointer丢给middle一个为0或2的点的情况
+'''
+def sortColors(self, nums: List[int]) -> None:
+    """
+    Do not return anything, modify nums in-place instead.
+    """
+    if not nums or len(nums) < 2:
+        return
+    l, r = 0, len(nums) - 1
+    middle = 0
+    
+    while middle <= r:
+        if nums[middle] == 0:
+            nums[l], nums[middle] = nums[middle], nums[l]
+            l += 1
+            middle += 1
+        elif nums[middle] == 2:
+            nums[r], nums[middle] = nums[middle], nums[r]
+            r -= 1
+            if nums[middle] == 1:
+                middle += 1
+        else:
+            middle += 1
+'''
+77. Combinations
+78. Subsets
+区别是78题需要把所有的组合加入result中，77只需要加入给定长度为k的组合
+'''
+
+'''
+79. Word Search
+使用dfs，可以将board的元素暂时变为0，来表示此点已经visit过。
+递归搜索完成后再改回来.
+'''
+def exist(self, board: List[List[str]], word: str) -> bool:
+    if not word or len(word) == 0:
+        return True
+    
+    if not board:
+        return False
+    
+    queue = collections.deque()
+    
+    
+    n = len(board)
+    m = len(board[0])
+    visited = []
+    for i in range(n):
+        for j in range(m):
+            if self.dfs(i, j, board, word, 0):
+                return True
+    return False
+
+def dfs(self, x, y, board, word, index):
+    DIRECTIONS = [(1,0), (-1, 0), (0, 1), (0, -1)]
+    if x < 0 or x > len(board) - 1 or y < 0 or y > len(board[0]) - 1:
+        return False
+    if board[x][y] != word[index]:
+        return False
+    
+    if index == len(word) - 1:
+        return True
+    
+    temp = board[x][y]
+    board[x][y] = 0
+    found =  (self.dfs(x + 1, y, board, word, index + 1) or 
+            self.dfs(x - 1, y, board, word, index + 1) or 
+            self.dfs(x, y + 1, board, word, index + 1) or 
+            self.dfs(x, y - 1, board, word, index + 1))
+    
+    board[x][y] = temp
+    return found
+
+
