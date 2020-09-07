@@ -273,7 +273,58 @@ def firstMissingPositive(self, nums: List[int]) -> int:
         return len(nums)
     
     return len(nums) + 1
-
+'''
+42. Trapping Rain Water
+解法1: dp，建立两个数组来记录位置i左边的最高挡板和右边的最高挡板
+i位置的水量 = 较低的挡板高度 - i位置挡板的高度
+'''
+def trap(self, height: List[int]) -> int:
+    n = len(height)
+    if not height or n == 0:
+        return 0
+    
+    l = [0 for _ in range(n)]
+    r = [0 for _ in range(n)]
+    
+    l[0] = height[0]
+    r[n - 1] = height[n - 1]
+    
+    for i in range(1, n):
+        l[i] = max(height[i], l[i - 1])
+    
+    for i in range(n - 2, -1, -1):
+        r[i] = max(height[i], r[i + 1])
+    
+    res = 0
+    for i in range(n):
+        res += min(l[i], r[i]) - height[i]
+        
+    return res
+'''
+解法2: 通过two pointer, 用lMax,rMax来代表左边和右边的最高挡板高度，
+哪一边的挡板底就把那一边的水量加入res，水量 = 底挡板高度 - 该位置高度
+然后移动l,r指针，并更新对应的lMax or rMax
+'''
+def trap(self, height: List[int]) -> int:
+    n = len(height)
+    if not height or n == 0:
+        return 0
+    
+    l, r = 0, n - 1
+    lMax, rMax = height[l], height[r]
+    res = 0
+    
+    while l < r:
+        if lMax < rMax:
+            res += lMax - height[l]
+            l += 1
+            lMax = max(lMax, height[l])
+        else:
+            res += rMax - height[r]
+            r -= 1
+            rMax = max(rMax, height[r])
+    
+    return res
 
 '''
 43. Multiply Strings
@@ -366,6 +417,34 @@ def myPow(self, x: float, n: int) -> float:
         
     res *= num
     return res
+
+'''
+52. N-Queens II
+解法： 利用两个array:dia antiDia来记录两个对角线是否被使用
+注意点： count不能用int，应为pass by value
+放在list中才能返回正确的值
+
+'''
+def totalNQueens(self, n: int) -> int:
+    count = [0]
+    dia = [True for _ in range(2 * n - 1)]
+    antiDia = [True for _ in range(2 * n - 1)]
+    self.helper(n, [], count, dia, antiDia)
+    return count[0]
+
+def helper(self, n, rows, count, dia, antiDia):
+    if len(rows) == n:
+        count[0] += 1
+        return
+    
+    row = len(rows) 
+    for i in range(n):
+        if dia[i + row] and antiDia[n - (row - i) - 1] and i not in rows:
+            dia[i + row], antiDia[n - (row - i) - 1] = False, False                
+            rows.append(i)
+            self.helper(n, rows, count, dia, antiDia)
+            rows.pop()
+            dia[i + row], antiDia[n - (row - i) - 1] = True, True
 
 '''
 54. Spiral Matrix
@@ -701,5 +780,184 @@ def dfs(self, x, y, board, word, index):
     
     board[x][y] = temp
     return found
+
+
+'''
+81. Search in Rotated Sorted Array II
+注意点： 需要调整end的位置来保证mid和end不是相同元素，
+否则无法确定array的哪一部分是正常排序的
+'''
+def search(self, nums: List[int], target: int) -> bool:
+    
+    if not nums:
+        return False
+    
+    start, end = 0, len(nums) - 1
+
+    while start + 1 < end:
+
+        mid = start + (end - start) // 2
+        
+        if nums[mid] == target:
+            return True
+        
+        if nums[mid] < nums[end]:
+            if nums[mid] <= target <= nums[end]:
+                start = mid
+            else:
+                end = mid
+        elif nums[mid] > nums[end]:
+            if nums[start] <= target <= nums[mid]:
+                end = mid
+            else:
+                start = mid
+        else:
+            end -= 1
+    
+    return nums[start] == target or nums[end] == target
+'''
+86. Partition List
+Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
+错误点：需要用两个dummy node, 如果part1，part2是同一个dummy node会导致part1或part2指向错误的node
+'''
+
+def partition(self, head: ListNode, x: int) -> ListNode:
+    if not head:
+        return None
+    temp = head
+    dummy1 = ListNode(0)
+    dummy2 = ListNode(0)
+    part1, part2 = dummy1, dummy2
+
+    
+    while temp:
+        if temp.val < x:
+            part1.next = temp
+            part1 = part1.next
+        else:
+            part2.next = temp
+            part2 = part2.next
+        temp = temp.next
+        
+    part2.next = None
+    part1.next = dummy2.next
+    
+    return dummy1.next
+
+'''
+88. Merge Sorted Array
+解法：因为需要把所有数字并入nums1，所以可以先把最大的数字放到nums1最后
+最后如果nums2还有剩余数字，就从后向前放入nums1的前面
+'''
+
+
+'''
+95. Unique Binary Search Trees II
+
+'''
+#方法一
+def generateTrees(self, n: int) -> List[TreeNode]:
+        if n == 0:
+            return []
+        return self.helper(1, n)
+    
+def helper(self, start, end):
+    res = []
+    if start > end:
+        return res
+    
+    for i in range(start, end + 1):
+        leftStructs = self.helper(start, i - 1)
+        rightStructs = self.helper(i + 1, end)
+        
+        if len(leftStructs) == 0 and len(rightStructs) == 0:
+            head = TreeNode(i)
+            res.append(head)
+            
+        elif len(leftStructs) == 0:
+            for rightNode in rightStructs:
+                head = TreeNode(i)
+                head.right = rightNode
+                res.append(head)
+        elif len(rightStructs) == 0:
+            for leftNode in leftStructs:
+                head = TreeNode(i)
+                head.left = leftNode
+                res.append(head)
+        else:
+            for leftNode in leftStructs:
+                for rightNode in rightStructs:
+                    head = TreeNode(i)
+                    head.right = rightNode
+                    head.left = leftNode
+                    res.append(head)
+    return res
+
+#方法二
+def generateTrees(self, n: int) -> List[TreeNode]:
+    if n == 0:
+        return []
+    return self.helper(1, n)
+
+def helper(self, start, end):
+    res = []
+    if start > end:
+        res.append(None)
+        return res
+    
+    for i in range(start, end + 1):
+        leftStructs = self.helper(start, i - 1)
+        rightStructs = self.helper(i + 1, end)
+        
+        for leftNode in leftStructs:
+            for rightNode in rightStructs:
+                head = TreeNode(i)
+                head.left = leftNode
+                head.right = rightNode
+                res.append(head)
+    return res
+
+
+'''
+96. Unique Binary Search Trees
+解法：使用dp，j代表的是左边子数节点的数量
+dp[i]就是dp[左子数节点数量] * dp[右子树节点数量]
+'''
+def numTrees(self, n: int) -> int:
+    
+    dp = [0 for _ in range(n + 1)]
+    
+    dp[0] = 1
+    dp[1] = 1
+    
+    for i in range(2, n + 1):
+        for j in range(i):
+            dp[i] += dp[j] * dp[i - j - 1]
+
+    return dp[n]
+
+
+
+'''
+98. Validate Binary Search Tree
+利用上下边界 自顶向下检验左子树和右子树
+'''
+def isValidBST(self, root: TreeNode) -> bool:
+    
+    if not root:
+        return True
+    minVal = -sys.maxsize - 1
+    maxVal = sys.maxsize
+    
+    return self.helper(root, minVal, maxVal)
+
+def helper(self, root, minVal, maxVal):
+    if not root:
+        return True
+    
+    if root.val <= minVal or root.val >= maxVal:
+        return False
+    return self.helper(root.left, minVal, root.val) and self.helper(root.right, root.val, maxVal)
+
 
 
