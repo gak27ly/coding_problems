@@ -3,9 +3,66 @@
 # 28, 29, 31, 33, 34, 35, 36, 38, 39, 40, 41, 43, 46, 47, 48 
 
 '''
-需重做： 6, 5, 19, 20, 22, 23, 
+需重做： 6, 5, 20, 22 
 26 -48
 '''
+6503631725
+
+'''
+5. Longest Palindromic Substring
+错误点： 没有利用helper function return index，而是每次return得到的string
+直接return 左右的index再比较得到最长的，最后return s[left, right + 1]
+'''
+def longestPalindrome(self, s: str) -> str:
+    start = end = 0
+    for i in range(0, len(s)):
+        left1, right1 = self.findLengest(s, i, i)
+        left2, right2 = self.findLengest(s, i, i + 1)
+        if right1 - left1 > right2 - left2 and right1 - left1 > end - start:
+            start, end = left1, right1
+        elif right2 - left2 > right1 - left1 and right2 - left2 > end - start:
+            start, end = left2, right2
+
+    return s[start : end + 1]
+
+def findLengest(self, s, left, right):
+    if left > right:
+        return 0
+    
+    while left >= 0 and right < len(s) and s[left] == s[right]:
+        left -= 1
+        right += 1
+    
+    return left + 1, right - 1
+        
+
+
+'''
+6. ZigZag Conversion
+解法：建立numRows长度的array来记录每一行的char
+错误点： 1. 没考虑结尾情况， outofindex
+2. 反方向遍历时i因该从 numRows - 2 开始.
+'''
+def convert(self, s: str, numRows: int) -> str:
+    
+    rows = [ "" for _ in range(numRows)]
+    index = 0
+    while index < len(s):
+        for i in range(numRows):
+            if index >= len(s):
+                break
+            rows[i] += (s[index])
+            index += 1
+
+        for i in range(numRows - 2, 0, -1):
+            if index >= len(s):
+                break
+            rows[i] += (s[index])
+            index += 1
+    
+    res = "".join(rows)
+    
+    return res
 
 
 '''
@@ -29,6 +86,7 @@
 去除倒数第n个node
 解法：利用dummy node从头开始使fast node与slow node保持n+1的距离
 然后让slow node跳过下一个node就能完成删除的操作
+History: 第三遍过
 '''
 def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
     dummy = ListNode()
@@ -47,10 +105,32 @@ def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
     return dummy.next
 
 '''
+20. Valid Parentheses
+错误点： 正确配对后没有pop， 最后要return stack是否为空
+
+'''
+    def isValid(self, s: str) -> bool:
+        mapping = {")" : "(",
+                    "}" : "{",
+                   "]" : "["
+                  }
+        q = deque()
+        
+        for ch in s:
+            if ch not in mapping:
+                q.append(ch)
+            elif ch in mapping and len(q) > 0 and q[-1] == mapping[ch]:
+                q.pop()
+            else:
+                return False
+            
+        return len(q) == 0
+'''
 22. Generate Parentheses
 注意点：因为只需要考虑加左边还是加右边，可以直接调用两个dfs function, 
 若有多种选择则需要用for loop来选中一种再dfs并去backtracking
 用left和right关系来判断是否是否合法
+二次错误点：left > n 需要return
 '''
 def generateParenthesis(self, n: int) -> List[str]:
     if n == 0:
@@ -78,14 +158,51 @@ def dfs(self, n, left, right, res, combination):
 '''
 23. Merge k Sorted Lists
 注意点： 使用index来划分传入的list of nodes 来减少空间复杂度
+二刷：mergeSort不太熟练
 '''
+def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+    if not lists:
+        return None
+    
+    return self.mergeRangeLists(lists, 0, len(lists) - 1)
 
+def mergeRangeLists(self, lists, start, end):      
+    if start == end:
+        return lists[start]
+    
+    mid = (start + end) // 2
+    
+    left = self.mergeRangeLists(lists, start, mid)
+    right = self.mergeRangeLists(lists, mid + 1, end)
+    return self.merge(left, right, ListNode(0))
+    
+
+def merge(self, left, right, temp):
+    head = temp
+    while left and right:
+        if left.val < right.val:
+            temp.next = left
+            temp = temp.next
+            left = left.next
+        else:
+            temp.next = right
+            temp = temp.next
+            right = right.next
+    
+    if left:
+        temp.next = left
+        
+    if right:
+        temp.next = right
+
+    return head.next  
 '''
 24. Swap Nodes in Pairs
 每两个node交换位置
 注意点： loop的边界情况
 利用更清晰的变量名称来帮助思考,完成一轮交换位置后，
 将变量按位置向后移动
+二刷过
 '''
 def swapPairs(self, head):
     # write your code here

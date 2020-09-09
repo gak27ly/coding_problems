@@ -551,6 +551,7 @@ class Solution:
             if self.helper(node1.left, node2.right) and self.helper(node1.right, node2.left):
                 return True
         return False
+        
 #BFS 在每一层用双指针检查是否对称
 def isSymmetric(self, root):
     # write your code here
