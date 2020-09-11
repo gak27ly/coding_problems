@@ -966,6 +966,109 @@ def partition(self, head: ListNode, x: int) -> ListNode:
 解法：因为需要把所有数字并入nums1，所以可以先把最大的数字放到nums1最后
 最后如果nums2还有剩余数字，就从后向前放入nums1的前面
 '''
+'''
+89. Gray Code
+毫无意义....
+'''
+def grayCode(self, n: int) -> List[int]:
+    res = []
+    for i in range(1 << n):
+        res.append(i ^ (i >> 1))
+    return res
+
+'''
+91. Decode Ways
+解法1: 使用记忆画搜索
+'''
+
+def numDecodings(self, s: str) -> int:
+    if not s or len(s) == 0:
+        return 0        
+    return self.helper(s, 0, {})
+    
+def helper(self, s, start, memo):
+    if start in memo:
+        return memo[start]
+    if start <= len(s) - 1 and s[start] == '0':
+        return 0
+    if start >= len(s) - 1:
+        return 1
+
+    res = self.helper(s, start + 1, memo)
+    
+    prefix = int(s[start]) * 10 + int(s[start + 1])
+    if prefix <= 26:
+        res += self.helper(s, start + 2, memo)
+         
+    memo[start] = res
+    
+    return res
+
+'''
+解法2: 递推 dp
+注意点 需要把dp[-1]赋值为1
+'''
+def numDecodings(self, s: str) -> int:
+    if not s or len(s) == 0:
+        return 0
+    if s[0] == '0':
+        return 0
+    
+    dp = [0 for _ in range(len(s))]
+    
+    dp[0] = 1        
+    dp[-1] = 1
+    
+    for i in range(1, len(s)):
+        res = 0
+        if not self.isValid(s[i]) and not self.bothValid(s[i - 1], s[i]):
+            return 0
+        if self.isValid(s[i]):
+            res += dp[i - 1]
+        if self.bothValid(s[i - 1], s[i]):
+            res += dp[i - 2]
+        
+        dp[i] = res
+    
+    return dp[len(s) - 1]
+
+
+        
+def isValid(self, ch):
+    if ch == '0':
+        return False
+    return True
+
+def bothValid(self, ch1, ch2):
+    if 10 <= int(ch1) * 10 + int(ch2) <= 26:
+        return True
+    return False
+'''
+dp优化-滚动数组
+'''
+def numDecodings(self, s: str) -> int:
+    if not s or len(s) == 0:
+        return 0
+    if s[0] == '0':
+        return 0
+    
+    dp = [0 for _ in range(len(s))]
+    
+    w1 = 1        
+    w2 = 1
+    
+    for i in range(1, len(s)):
+        res = 0
+        if not self.isValid(s[i]) and not self.bothValid(s[i - 1], s[i]):
+            return 0
+        if self.isValid(s[i]):
+            res += w1
+        if self.bothValid(s[i - 1], s[i]):
+            res += w2
+        w2 = w1
+        w1 = res
+
+    return w1
 
 
 '''
