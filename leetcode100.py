@@ -1070,7 +1070,42 @@ def numDecodings(self, s: str) -> int:
 
     return w1
 
+'''
+93. Restore IP Addresses
+注意点：
+1. 加入结果list的条件 len(curr) == 4 and left > right
+2. 在提取prefix的时候注意右边界不要超出原数组边界，否则相同的prefix会被重复提取
+'''
+def restoreIpAddresses(self, s: str) -> List[str]:
+    res = []
+    self.helper(s, 0, len(s) - 1, [], res)
+    return res
 
+def helper(self, s, left, right, curr, res):
+    if len(curr) > 4:
+        return 
+    
+    if left > right and len(curr) == 4:
+        res.append(".".join(curr))
+        return
+    
+    for i in range(1, 4):
+        #保证prefix不重复
+        if left + i > right + 1:
+            continue
+        prefix = s[left : left + i]
+        if self.isValid(prefix):
+            curr.append(prefix)
+            self.helper(s, left + i, right, curr, res)
+            curr.pop()
+
+def isValid(self, prefix):
+    if len(prefix) > 1 and prefix[0] == "0":
+        return False
+    if int(prefix) < 0 or int(prefix) > 255:
+        return False
+    return True
+    
 '''
 95. Unique Binary Search Trees II
 
@@ -1179,5 +1214,26 @@ def helper(self, root, minVal, maxVal):
         return False
     return self.helper(root.left, minVal, root.val) and self.helper(root.right, root.val, maxVal)
 
+'''
+101. Symmetric Tree
+binaryTree中有收录，可用bfs，这里用了dfs
+'''
+
+def isSymmetric(self, root: TreeNode) -> bool:
+    if not root:
+        return True
+
+    return self.helper(root.left, root.right)
 
 
+def helper(self, root1, root2):
+    if not root1 and not root2:
+        return True
+        
+    if root1 and root2:
+        if root1.val != root2.val:
+            return False
+        if self.helper(root1.left, root2.right) and self.helper(root1.right, root2.left):
+            return True
+    return False
+    
