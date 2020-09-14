@@ -103,3 +103,56 @@ def bfs(self, root, res):
                 n -= 1
             res.append(level)
             direction = not direction
+
+'''
+104. Maximum Depth of Binary Tree
+简单题
+'''
+'''
+107. Binary Tree Level Order Traversal II
+简单题，用deque appendleft到res里即可
+'''
+
+'''
+110. Balanced Binary Tree
+'''
+def isBalanced(self, root: TreeNode) -> bool:
+    if not root:
+        return True
+    h1, h2, balance = self.helper(root)
+    return balance
+
+def helper(self, root):
+    if not root:
+        return -1, -1, True
+    
+    l1, r1, leftBalance = self.helper(root.left)
+    l2, r2, rightBalance = self.helper(root.right)
+    
+    if leftBalance and rightBalance:
+        leftHeight = max(l1, r1) + 1
+        rightHeight = max(l2, r2) + 1
+        return leftHeight, rightHeight, abs(leftHeight - rightHeight) <= 1
+    
+    return 0, 0, False
+
+'''
+111. Minimum Depth of Binary Tree
+注意： [3, 2] return值是2
+'''
+
+def minDepth(self, root: TreeNode) -> int:
+    if not root:
+        return 0
+    
+    left = self.minDepth(root.left)
+    right = self.minDepth(root.right)
+    
+    if left == 0 and right == 0:
+        return 1
+    if left and right:
+        return min(left, right) + 1
+    if left:
+        return left + 1
+    if right:
+        return right + 1
