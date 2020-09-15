@@ -80,29 +80,29 @@ def bfs(self, root, res):
 通过调整元素append进入的位置来调整，避免了使用level[::-1]（时间复杂度为O(n)）
 '''
 
-    def bfs(self, root, res):
-        queue = collections.deque([root])
-        direction = True
-        while queue:
-            n = len(queue)
-            level= []
-            while n:
-                if direction:
-                    node = queue.popleft()
-                    if node.left:
-                        queue.append(node.left)
-                    if node.right:
-                        queue.append(node.right)
-                else:
-                    node = queue.pop()
-                    if node.right:
-                        queue.appendleft(node.right)
-                    if node.left:
-                        queue.appendleft(node.left)
-                level.append(node.val)
-                n -= 1
-            res.append(level)
-            direction = not direction
+def bfs(self, root, res):
+    queue = collections.deque([root])
+    direction = True
+    while queue:
+        n = len(queue)
+        level= []
+        while n:
+            if direction:
+                node = queue.popleft()
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            else:
+                node = queue.pop()
+                if node.right:
+                    queue.appendleft(node.right)
+                if node.left:
+                    queue.appendleft(node.left)
+            level.append(node.val)
+            n -= 1
+        res.append(level)
+        direction = not direction
 
 '''
 104. Maximum Depth of Binary Tree
@@ -301,7 +301,7 @@ def helper(self, root, sum, curr, res, total):
     
     if not root.left and not root.right and total == sum:
         res.append(curr[:])
-    
+        
     self.helper(root.left, sum, curr, res, total)
     self.helper(root.right, sum, curr, res, total)
     curr.pop()
@@ -353,3 +353,104 @@ def helper(self, root):
         return root, rtail
     return root, root
 
+'''
+116. Populating Next Right Pointers in Each Node
+利用preorder，先连接左右节点，再在有next node的情况下连接中间节点
+'''
+def connect(self, root: 'Node') -> 'Node':
+    if not root or not root.left:
+        return root
+    
+    if root.left and root.right:
+        root.left.next = root.right
+    if root.next:
+        root.right.next = root.next.left
+    
+    self.connect(root.left)
+    self.connect(root.right)
+    
+    return root
+
+'''
+117. Populating Next Right Pointers in Each Node II
+解法： 用firstNode表示每一行第一个node，currentNode代表当前node
+根据条件利用helper function找到下一个连接的位置
+'''
+
+def connect(self, root: 'Node') -> 'Node':
+    if not root:
+        return root
+    
+    firstNode = root
+    
+    while firstNode:
+        currentNode = firstNode
+        while currentNode:
+            if currentNode.left:
+                if currentNode.right:
+                    currentNode.left.next = currentNode.right
+                else:
+                    currentNode.left.next = self.findNext(currentNode)
+            if currentNode.right:
+                currentNode.right.next = self.findNext(currentNode)
+
+            currentNode = currentNode.next
+        firstNode = self.findNextLevel(firstNode)
+    
+    return root
+        
+    
+def findNext(self, currentNode):
+    if not currentNode:
+        return None
+    currentNode = currentNode.next
+    while currentNode:
+        if currentNode.left:
+            return currentNode.left
+        if currentNode.right:
+            return currentNode.right
+        currentNode = currentNode.next
+    return currentNode
+
+def findNextLevel(self, firstNode):
+    while firstNode:
+        if firstNode.left:
+            return firstNode.left
+        if firstNode.right:
+            return firstNode.right
+        firstNode = firstNode.next
+    return firstNode
+
+'''
+118. Pascal's Triangle
+建立好2d list往里填充即可
+'''
+
+    def generate(self, numRows: int) -> List[List[int]]:
+
+        triangle =[[1 for _ in range(j + 1)] for j in range(numRows)]
+        
+        for i in range(1, numRows):
+
+            for j in range(1, i + 1):
+                if j == i:
+                    continue
+                else:
+                    triangle[i][j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
+
+        return triangle
+
+'''
+119. Pascal's Triangle II
+可以只用一个list，计算每一行时向 0 index加入1来方便计算
+错误点： 每一行的最后一位不需要计算
+'''
+def getRow(self, rowIndex: int) -> List[int]:
+    
+    row = []
+        
+    for i in range(rowIndex + 1):
+        row.insert(0, 1)
+        for j in range(1, len(row) - 1):
+            row[j] = row[j] + row[j + 1]
+    return row
