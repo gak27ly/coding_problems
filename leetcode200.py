@@ -23,6 +23,7 @@ def helper(self, root1, root2):
 '''
 102. Binary Tree Level Order Traversal
 bfs
+错误点：要用popleft()
 '''
 def levelOrder(self, root: TreeNode) -> List[List[int]]:
     if not root:
@@ -47,6 +48,10 @@ def bfs(self, root, res):
             n -= 1
         res.append(level)
 
+'''
+103. Binary Tree Zigzag Level Order Traversal
+错误点： direction要设置在while loop外面
+'''
 
 def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:
     if not root:
@@ -108,54 +113,6 @@ def bfs(self, root, res):
 104. Maximum Depth of Binary Tree
 简单题
 '''
-'''
-107. Binary Tree Level Order Traversal II
-简单题，用deque appendleft到res里即可
-'''
-
-'''
-110. Balanced Binary Tree
-'''
-def isBalanced(self, root: TreeNode) -> bool:
-    if not root:
-        return True
-    h1, h2, balance = self.helper(root)
-    return balance
-
-def helper(self, root):
-    if not root:
-        return -1, -1, True
-    
-    l1, r1, leftBalance = self.helper(root.left)
-    l2, r2, rightBalance = self.helper(root.right)
-    
-    if leftBalance and rightBalance:
-        leftHeight = max(l1, r1) + 1
-        rightHeight = max(l2, r2) + 1
-        return leftHeight, rightHeight, abs(leftHeight - rightHeight) <= 1
-    
-    return 0, 0, False
-
-'''
-111. Minimum Depth of Binary Tree
-注意： [3, 2] return值是2
-'''
-
-def minDepth(self, root: TreeNode) -> int:
-    if not root:
-        return 0
-    
-    left = self.minDepth(root.left)
-    right = self.minDepth(root.right)
-    
-    if left == 0 and right == 0:
-        return 1
-    if left and right:
-        return min(left, right) + 1
-    if left:
-        return left + 1
-    if right:
-        return right + 1
 
 '''
 105. Construct Binary Tree from Preorder and Inorder Traversal
@@ -218,6 +175,11 @@ def helper(self, inorder, postorder, inStart, inEnd, postStart):
     return root
 
 '''
+107. Binary Tree Level Order Traversal II
+简单题，用deque appendleft到res里即可
+'''
+
+'''
 108. Convert Sorted Array to Binary Search Tree
 简单题 找到中间点作为root再分别处理左右两边节点
 '''
@@ -278,6 +240,56 @@ def sortedListToBST(self, head: ListNode) -> TreeNode:
         if dummy:
             dummy.next = None
         return slow
+
+'''
+110. Balanced Binary Tree
+'''
+def isBalanced(self, root: TreeNode) -> bool:
+    if not root:
+        return True
+    h1, h2, balance = self.helper(root)
+    return balance
+
+def helper(self, root):
+    if not root:
+        return -1, -1, True
+    
+    l1, r1, leftBalance = self.helper(root.left)
+    l2, r2, rightBalance = self.helper(root.right)
+    
+    if leftBalance and rightBalance:
+        leftHeight = max(l1, r1) + 1
+        rightHeight = max(l2, r2) + 1
+        return leftHeight, rightHeight, abs(leftHeight - rightHeight) <= 1
+    
+    return 0, 0, False
+
+'''
+111. Minimum Depth of Binary Tree
+注意： [3, 2] return值是2
+错误点： 没有考虑到左节点为空或右节点为空的情况
+需再刷
+'''
+
+def minDepth(self, root: TreeNode) -> int:
+    if not root:
+        return 0
+    
+    left = self.minDepth(root.left)
+    right = self.minDepth(root.right)
+    
+    if left == 0 and right == 0:
+        return 1
+    if left and right:
+        return min(left, right) + 1
+    if left:
+        return left + 1
+    if right:
+        return right + 1
+
+
+
+
 
 '''
 113. Path Sum II
