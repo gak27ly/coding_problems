@@ -466,3 +466,31 @@ def getRow(self, rowIndex: int) -> List[int]:
         for j in range(1, len(row) - 1):
             row[j] = row[j] + row[j + 1]
     return row
+
+
+
+
+'''
+125. Valid Palindrome
+简单two pointer
+'''
+def isPalindrome(self, s: str) -> bool:
+    if not s or len(s) == 0:
+        return True
+    
+    if len(s) == 1:
+        return True
+
+    i, j = 0, len(s) - 1
+    
+    while i < j:
+        while i < j and not s[i].isalpha() and not s[i].isnumeric():
+            i += 1
+        while i < j and not s[j].isalpha() and not s[j].isnumeric():
+            j -= 1
+        if i < j and s[i].lower() != s[j].lower():
+            return False
+        i += 1
+        j -= 1
+            
+    return True
