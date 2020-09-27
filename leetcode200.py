@@ -494,3 +494,71 @@ def isPalindrome(self, s: str) -> bool:
         j -= 1
             
     return True
+
+'''
+129. Sum Root to Leaf Numbers
+'''
+
+def sumNumbers(self, root: TreeNode) -> int:
+    if not root:
+        return 0
+    return self.helper(root, 0)
+    
+def helper(self, root, curr):
+    if not root:
+        return 0
+    if not root.left and not root.right:
+        return curr *10 + root.val
+    
+    val = curr * 10 + root.val
+    
+    left = self.helper(root.left, val)
+    right = self.helper(root.right, val)
+    
+    return left + right
+
+'''
+130. Surrounded Regions
+联通块，从边上开始向内搜索
+'''
+
+def solve(self, board: List[List[str]]) -> None:
+"""
+Do not return anything, modify board in-place instead.
+"""
+if not board or len(board) == 0:
+    return
+
+n, m = len(board), len(board[0])
+
+for i in range(n):
+    self.dfs(i, 0, board)
+    self.dfs(i, m - 1, board)
+
+for j in range(m):
+    self.dfs(0, j, board)
+    self.dfs(n - 1, j, board)
+    
+    
+for i in range(n):
+    for j in range(m):
+        if board[i][j] == 'G':
+            board[i][j] = 'O'
+        else:
+            board[i][j] = 'X'
+        
+        
+def dfs(self, x, y, board):
+    n, m = len(board), len(board[0])
+    
+    if x < 0 or x >= n or y < 0 or y >= m:
+        return
+    if board[x][y] != 'O':
+        return
+    if board[x][y] == 'G':
+        return 
+    board[x][y] = 'G'            
+    self.dfs(x + 1, y, board)
+    self.dfs(x, y + 1, board)
+    self.dfs(x - 1, y, board)
+    self.dfs(x, y - 1, board)
