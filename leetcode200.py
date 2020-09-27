@@ -496,6 +496,7 @@ def isPalindrome(self, s: str) -> bool:
     return True
 
 '''
+<<<<<<< HEAD
 129. Sum Root to Leaf Numbers
 '''
 
@@ -562,3 +563,88 @@ def dfs(self, x, y, board):
     self.dfs(x, y + 1, board)
     self.dfs(x - 1, y, board)
     self.dfs(x, y - 1, board)
+
+
+'''
+131. Palindrome Partitioning
+'''
+def partition(self, s: str) -> List[List[str]]:
+    if not s or len(s) == 0:
+        return []
+    
+    res = []
+    self.helper(s, 0, [], res)
+    return res
+
+def helper(self, s, start, curr, res):
+    if start >= len(s):
+        res.append(curr[:])
+        return
+    
+    for i in range(start, len(s)):
+        prefix = s[start : i + 1]
+        if not self.isPalindrome(prefix):
+            continue
+        curr.append(prefix)
+        self.helper(s, i + 1, curr, res)
+        curr.pop()
+    
+def isPalindrome(self, s):
+    if not s or len(s) == 0:
+        return False
+    start, end = 0, len(s) - 1
+    while start < end:
+        if s[start] != s[end]:
+            return False
+        start += 1
+        end -= 1
+    return True
+
+
+'''
+133. Clone Graph
+解法：bfs 建立所有的点，用map把新点和对应的旧点链接
+然后用一个forloop来链接新点之间的联系
+'''
+def cloneGraph(self, node: 'Node') -> 'Node':
+    if not node or node is None:
+        return
+
+    queue = collections.deque([node])
+    mapping = {}
+    
+    while queue:
+        point = queue.popleft()
+        if point not in mapping:
+            newNode = Node(point.val)
+            mapping[point] = newNode
+            for neighbor in point.neighbors:
+                queue.append(neighbor)
+    
+    for point in mapping:
+        for neighbor in point.neighbors:
+            mapping[point].neighbors.append(mapping[neighbor])
+            
+    return mapping[node]
+
+'''
+134. Gas Station
+解法：O(n)
+用curr记录当前起点的总油量，若小于0则无法以当前起点到i为起点, 因为油量不够.
+重新以i + 1为起点, 记录该起点油量.
+另记录总油量来判断是否能走完全程.
+'''
+def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:       
+    totalGas, curr = 0, 0
+    for i in range(len(gas)):
+        curr += gas[i] - cost[i]
+        if curr < 0:
+            start = i + 1
+            curr = 0
+        
+        totalGas += curr
+        
+    if totalGas < 0:
+        return -1
+    else:
+        return start
