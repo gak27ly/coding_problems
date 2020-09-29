@@ -648,3 +648,62 @@ def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
         return -1
     else:
         return start
+'''
+139. Word Break
+dfs + memo： 注意取prefix的边界
+'''
+def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+    memo = {}
+    return self.helper(s, 0, wordDict, memo)
+
+def helper(self, s, startIndex, wordDict, memo):
+    if startIndex in memo:
+        return memo[startIndex]
+    
+    if startIndex >= len(s):
+        return True
+    
+    for i in range(startIndex, len(s)):
+        prefix = s[startIndex : i + 1]
+        
+        if prefix not in wordDict:
+            continue
+        if self.helper(s, i + 1, wordDict, memo):
+            memo[startIndex] = True
+            return True
+    memo[startIndex] = False 
+    return False
+
+'''
+140. Word Break II
+dfs + memo
+解法： 把合法的prefix加入到剩余的string的答案中
+注意当 start >= len(s)时返回[""]， 这种情况res.append(prefix)
+'''
+
+def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:
+    memo = {}
+    return self.helper(s, 0, wordDict, memo)
+    
+
+def helper(self, s, start, wordDict, memo):
+    if start in memo:
+        return memo[start]
+    
+    if start >= len(s):
+        return [""]
+    res = []
+    
+    for i in range(start, len(s)):
+        prefix = s[start : i + 1]
+        if prefix not in wordDict:
+            continue
+        rightRes = self.helper(s, i + 1, wordDict, memo)
+        for right in rightRes:
+            if right != "":
+                res.append(prefix + " " + right)
+            else:
+                res.append(prefix)
+    
+    memo[start] = res
+    return res
