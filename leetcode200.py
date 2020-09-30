@@ -581,3 +581,51 @@ def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
         return -1
     else:
         return start
+
+'''
+136. Single Number
+O(1) space解法：Bit Manipulation
+用XOR特点 a ^ a = 0, a ^ 0 = a
+对所有数字取XOR最后得到的剩余值就是single number
+'''
+def singleNumber(self, nums: List[int]) -> int:
+    mapping = {}
+    
+    for i in nums:
+        if i in mapping:
+            mapping[i] += 1
+        else:
+            mapping[i] = 1
+    
+    for num in mapping:
+        if mapping[num] == 1:
+            return num
+
+def singleNumber(self, nums):
+    a = 0
+    for i in nums:
+        a ^= i
+    return a
+
+
+'''
+138. Copy List with Random Pointer
+解法： 和copy graph相同，先建立新的点并与老的点链接，再通过一层循环来建立关系
+'''
+def copyRandomList(self, head: 'Node') -> 'Node':
+    if not head:
+        return head
+    mapping = {}
+    curr = head
+    while curr:
+        node = Node(curr.val)
+        mapping[curr] = node
+        curr = curr.next
+        
+    curr = head
+    
+    while curr:
+        mapping.get(curr).next = mapping.get(curr.next)
+        mapping.get(curr).random = mapping.get(curr.random)
+        curr = curr.next
+    return mapping[head]
