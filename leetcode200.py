@@ -496,12 +496,79 @@ def isPalindrome(self, s: str) -> bool:
     return True
 
 '''
-131. Palindrome Partitioning
-
+<<<<<<< HEAD
+129. Sum Root to Leaf Numbers
 '''
 
+def sumNumbers(self, root: TreeNode) -> int:
+    if not root:
+        return 0
+    return self.helper(root, 0)
+    
+def helper(self, root, curr):
+    if not root:
+        return 0
+    if not root.left and not root.right:
+        return curr *10 + root.val
+    
+    val = curr * 10 + root.val
+    
+    left = self.helper(root.left, val)
+    right = self.helper(root.right, val)
+    
+    return left + right
 
-    def partition(self, s: str) -> List[List[str]]:
+'''
+130. Surrounded Regions
+联通块，从边上开始向内搜索
+'''
+
+def solve(self, board: List[List[str]]) -> None:
+"""
+Do not return anything, modify board in-place instead.
+"""
+if not board or len(board) == 0:
+    return
+
+n, m = len(board), len(board[0])
+
+for i in range(n):
+    self.dfs(i, 0, board)
+    self.dfs(i, m - 1, board)
+
+for j in range(m):
+    self.dfs(0, j, board)
+    self.dfs(n - 1, j, board)
+    
+    
+for i in range(n):
+    for j in range(m):
+        if board[i][j] == 'G':
+            board[i][j] = 'O'
+        else:
+            board[i][j] = 'X'
+        
+        
+def dfs(self, x, y, board):
+    n, m = len(board), len(board[0])
+    
+    if x < 0 or x >= n or y < 0 or y >= m:
+        return
+    if board[x][y] != 'O':
+        return
+    if board[x][y] == 'G':
+        return 
+    board[x][y] = 'G'            
+    self.dfs(x + 1, y, board)
+    self.dfs(x, y + 1, board)
+    self.dfs(x - 1, y, board)
+    self.dfs(x, y - 1, board)
+
+
+'''
+131. Palindrome Partitioning
+'''
+def partition(self, s: str) -> List[List[str]]:
     if not s or len(s) == 0:
         return []
     
@@ -581,6 +648,7 @@ def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
         return -1
     else:
         return start
+<<<<<<< HEAD
 
 '''
 136. Single Number
@@ -629,3 +697,154 @@ def copyRandomList(self, head: 'Node') -> 'Node':
         mapping.get(curr).random = mapping.get(curr.random)
         curr = curr.next
     return mapping[head]
+
+'''
+139. Word Break
+dfs + memo： 注意取prefix的边界
+'''
+def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+    memo = {}
+    return self.helper(s, 0, wordDict, memo)
+
+def helper(self, s, startIndex, wordDict, memo):
+    if startIndex in memo:
+        return memo[startIndex]
+    
+    if startIndex >= len(s):
+        return True
+    
+    for i in range(startIndex, len(s)):
+        prefix = s[startIndex : i + 1]
+        
+        if prefix not in wordDict:
+            continue
+        if self.helper(s, i + 1, wordDict, memo):
+            memo[startIndex] = True
+            return True
+    memo[startIndex] = False 
+    return False
+
+'''
+140. Word Break II
+dfs + memo
+解法： 把合法的prefix加入到剩余的string的答案中
+注意当 start >= len(s)时返回[""]， 这种情况res.append(prefix)
+'''
+
+def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:
+    memo = {}
+    return self.helper(s, 0, wordDict, memo)
+    
+
+def helper(self, s, start, wordDict, memo):
+    if start in memo:
+        return memo[start]
+    
+    if start >= len(s):
+        return [""]
+    res = []
+    
+    for i in range(start, len(s)):
+        prefix = s[start : i + 1]
+        if prefix not in wordDict:
+            continue
+        rightRes = self.helper(s, i + 1, wordDict, memo)
+        for right in rightRes:
+            if right != "":
+                res.append(prefix + " " + right)
+            else:
+                res.append(prefix)
+    
+    memo[start] = res
+    return res
+
+'''
+142. Linked List Cycle II
+规律： 先找相遇点，再用一个pointer从头开始走，想遇到的点就是回转点
+'''
+def detectCycle(self, head: ListNode) -> ListNode:
+    if not head:
+        return None
+    
+    dummy = ListNode(0)
+    p1 = p2 = p3 = dummy
+    dummy.next = head
+    
+    while p1 and p2 and p2.next:
+        p1 = p1.next
+        p2 = p2.next.next
+        if p1 == p2:
+            break
+    
+    
+    while p2:
+        p2 = p2.next
+        p3 = p3.next
+        if p2 == p3:
+            return p3
+    
+    return None
+
+'''
+143. Reorder List
+解法： 平分成两段，reverse后一段再重新连接
+'''
+
+def reorderList(self, head: ListNode) -> None:
+    """
+    Do not return anything, modify head in-place instead.
+    """
+    if not head:
+        return None
+    dummy = ListNode(0)
+    dummy.next = head
+    p1 = p2 = dummy
+    pre = None
+    while p2 and p2.next:
+        pre = p1
+        p1 = p1.next
+        p2 = p2.next.next
+    h1 = head
+    h2 = self.reverse(p1.next)
+    p1.next = None
+    self.combine(h1, h2)
+    return head
+    
+def reverse(self, head):
+    if not head:
+        return None
+    p1, p2 = head, head.next
+    
+    while p2:
+        temp = p2.next
+        p2.next = p1
+        p1 = p2
+        p2 = temp
+    
+    head.next = None
+    return p1
+        
+def combine(self, h1, h2):
+    while h1 and h2:
+        temp = h1.next
+        h1.next = h2
+        h1 = temp
+        h1, h2 = h2, h1
+
+'''
+144. Binary Tree Preorder Traversal
+'''
+def preorderTraversal(self, root: TreeNode) -> List[int]:
+    if not root:
+        return []
+    res = []
+    self.traverse(root, res)
+    return res
+
+def traverse(self, root, res):
+    if not root:
+        return 
+    
+    res.append(root.val)
+    self.traverse(root.left, res)
+    self.traverse(root.right, res)
