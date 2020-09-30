@@ -707,3 +707,94 @@ def helper(self, s, start, wordDict, memo):
     
     memo[start] = res
     return res
+
+'''
+142. Linked List Cycle II
+规律： 先找相遇点，再用一个pointer从头开始走，想遇到的点就是回转点
+'''
+def detectCycle(self, head: ListNode) -> ListNode:
+    if not head:
+        return None
+    
+    dummy = ListNode(0)
+    p1 = p2 = p3 = dummy
+    dummy.next = head
+    
+    while p1 and p2 and p2.next:
+        p1 = p1.next
+        p2 = p2.next.next
+        if p1 == p2:
+            break
+    
+    
+    while p2:
+        p2 = p2.next
+        p3 = p3.next
+        if p2 == p3:
+            return p3
+    
+    return None
+
+'''
+143. Reorder List
+解法： 平分成两段，reverse后一段再重新连接
+'''
+
+def reorderList(self, head: ListNode) -> None:
+    """
+    Do not return anything, modify head in-place instead.
+    """
+    if not head:
+        return None
+    dummy = ListNode(0)
+    dummy.next = head
+    p1 = p2 = dummy
+    pre = None
+    while p2 and p2.next:
+        pre = p1
+        p1 = p1.next
+        p2 = p2.next.next
+    h1 = head
+    h2 = self.reverse(p1.next)
+    p1.next = None
+    self.combine(h1, h2)
+    return head
+    
+def reverse(self, head):
+    if not head:
+        return None
+    p1, p2 = head, head.next
+    
+    while p2:
+        temp = p2.next
+        p2.next = p1
+        p1 = p2
+        p2 = temp
+    
+    head.next = None
+    return p1
+        
+def combine(self, h1, h2):
+    while h1 and h2:
+        temp = h1.next
+        h1.next = h2
+        h1 = temp
+        h1, h2 = h2, h1
+
+'''
+144. Binary Tree Preorder Traversal
+'''
+def preorderTraversal(self, root: TreeNode) -> List[int]:
+    if not root:
+        return []
+    res = []
+    self.traverse(root, res)
+    return res
+
+def traverse(self, root, res):
+    if not root:
+        return 
+    
+    res.append(root.val)
+    self.traverse(root.left, res)
+    self.traverse(root.right, res)
