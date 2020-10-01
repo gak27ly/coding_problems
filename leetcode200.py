@@ -798,3 +798,69 @@ def traverse(self, root, res):
     res.append(root.val)
     self.traverse(root.left, res)
     self.traverse(root.right, res)
+
+'''
+147. Insertion Sort List
+注意理解insertion是从头开始找比当前选中元素大的元素
+'''
+def insertionSortList(self, head: ListNode) -> ListNode:
+    if not head:
+        return head
+    dummy = ListNode(0)
+    dummy.next = head
+    curr = head
+    
+    while curr and curr.next:
+        if curr.val < curr.next.val:
+            curr = curr.next
+        else:
+            pre = dummy
+            temp = curr.next
+            curr.next = curr.next.next
+            while pre.next.val < temp.val:
+                pre = pre.next
+            temp.next = pre.next
+            pre.next = temp
+        
+    return dummy.next
+
+'''
+148. Sort List
+解法：merge sort
+分割list成两段，再进行merge
+注意： sortList出口条件是当head.next没有时返回当前的node
+'''
+
+def sortList(self, head: ListNode) -> ListNode:
+    if not head or not head.next:
+        return head
+    dummy = ListNode(0)
+    dummy.next = head
+    
+    slow, fast = dummy, dummy
+    
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    part1 = dummy.next
+    part2 = slow.next
+    slow.next = None
+    
+    return self.merge(self.sortList(part1), self.sortList(part2))
+
+def merge(self, p1, p2):
+    dummy = ListNode(0)
+    tail = dummy
+    while p1 and p2:
+        if p1.val < p2.val:
+            tail.next = p1
+            p1 = p1.next
+        else:
+            tail.next = p2
+            p2 = p2.next
+        tail = tail.next
+    if p1:
+        tail.next = p1
+    if p2:
+        tail.next = p2
+    return dummy.next
