@@ -496,7 +496,6 @@ def isPalindrome(self, s: str) -> bool:
     return True
 
 '''
-<<<<<<< HEAD
 129. Sum Root to Leaf Numbers
 '''
 
@@ -648,7 +647,6 @@ def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
         return -1
     else:
         return start
-<<<<<<< HEAD
 
 '''
 136. Single Number
@@ -834,6 +832,7 @@ def combine(self, h1, h2):
 '''
 144. Binary Tree Preorder Traversal
 '''
+#recursion
 def preorderTraversal(self, root: TreeNode) -> List[int]:
     if not root:
         return []
@@ -848,3 +847,40 @@ def traverse(self, root, res):
     res.append(root.val)
     self.traverse(root.left, res)
     self.traverse(root.right, res)
+#iteration
+def preorderTraversal(self, root: TreeNode) -> List[int]:
+    if not root:
+        return []
+    stack = [root]
+    res = []
+    
+    while stack:
+        node = stack.pop()
+        res.append(node.val)
+        if node.right:
+            stack.append(node.right)
+        if node.left:
+            stack.append(node.left)
+    return res
+
+'''
+145. Binary Tree Postorder Traversal
+iterative: 与preorder相同，只是方向相反
+'''
+def postorderTraversal(self, root: TreeNode) -> List[int]:
+    if not root:
+        return []
+    stack = [root]
+    res = []
+    while stack:
+        node = stack.pop()
+        res.append(node.val)
+        if node.left:
+            stack.append(node.left)
+        if node.right:
+            stack.append(node.right)
+            
+    return res[::-1]
+
+
+
