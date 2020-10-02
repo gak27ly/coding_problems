@@ -847,6 +847,7 @@ def traverse(self, root, res):
     res.append(root.val)
     self.traverse(root.left, res)
     self.traverse(root.right, res)
+
 #iteration
 def preorderTraversal(self, root: TreeNode) -> List[int]:
     if not root:
@@ -882,5 +883,132 @@ def postorderTraversal(self, root: TreeNode) -> List[int]:
             
     return res[::-1]
 
+'''
+146. LRU Cache
+利用double linked list 和 hashmap实现O(1)的读写
+'''
+class ListNode:
+    def __init__(self, value, key):
+      self.val = value
+      self.next = None
+      self.pre = None
+      self.key = key
 
+class LRUCache:
 
+def __init__(self, capacity: int):
+    self.mapping = {}
+    self.dummy = ListNode(0, 0)
+    self.tail = ListNode(0, 0)
+    self.dummy.next = self.tail
+    self.tail.pre = self.dummy
+    self.capacity = capacity
+    self.count = 0
+    
+def get(self, key: int) -> int:
+    if key in self.mapping:
+        temp = self.mapping[key] 
+        temp.next.pre = temp.pre
+        temp.pre.next = temp.next
+        temp.next = self.dummy.next
+        temp.next.pre = temp
+        temp.pre = self.dummy
+        self.dummy.next = temp
+        return self.mapping[key].val
+    else:
+        return -1
+
+def put(self, key: int, value: int) -> None:
+    if key in self.mapping:
+        temp = self.mapping[key]
+        temp.val = value
+
+        temp.next.pre = temp.pre
+        temp.pre.next = temp.next
+        temp.next = self.dummy.next
+        temp.next.pre = temp
+        temp.pre = self.dummy
+        self.dummy.next = temp
+    else:
+        self.count += 1
+        node = ListNode(value, key)
+        node.pre = self.dummy
+        node.next = self.dummy.next
+        self.dummy.next.pre = node
+        self.dummy.next = node
+        self.mapping[key] = node
+        
+        if self.count > self.capacity:
+            node = self.tail.pre
+            self.tail.pre = node.pre
+            node.pre.next = self.tail
+            self.count -= 1
+            
+            del self.mapping[node.key]
+    return
+
+'''
+147. Insertion Sort List
+注意理解insertion是从头开始找比当前选中元素大的元素
+'''
+def insertionSortList(self, head: ListNode) -> ListNode:
+    if not head:
+        return head
+    dummy = ListNode(0)
+    dummy.next = head
+    curr = head
+    
+    while curr and curr.next:
+        if curr.val < curr.next.val:
+            curr = curr.next
+        else:
+            pre = dummy
+            temp = curr.next
+            curr.next = curr.next.next
+            while pre.next.val < temp.val:
+                pre = pre.next
+            temp.next = pre.next
+            pre.next = temp
+        
+    return dummy.next
+
+'''
+148. Sort List
+解法：merge sort
+分割list成两段，再进行merge
+注意： sortList出口条件是当head.next没有时返回当前的node
+'''
+
+def sortList(self, head: ListNode) -> ListNode:
+    if not head or not head.next:
+        return head
+    dummy = ListNode(0)
+    dummy.next = head
+    
+    slow, fast = dummy, dummy
+    
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    part1 = dummy.next
+    part2 = slow.next
+    slow.next = None
+    
+    return self.merge(self.sortList(part1), self.sortList(part2))
+
+def merge(self, p1, p2):
+    dummy = ListNode(0)
+    tail = dummy
+    while p1 and p2:
+        if p1.val < p2.val:
+            tail.next = p1
+            p1 = p1.next
+        else:
+            tail.next = p2
+            p2 = p2.next
+        tail = tail.next
+    if p1:
+        tail.next = p1
+    if p2:
+        tail.next = p2
+    return dummy.next
