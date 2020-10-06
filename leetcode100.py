@@ -9,8 +9,9 @@
 
 '''
 5. Longest Palindromic Substring
-错误点： 没有利用helper function return index，而是每次return得到的string
+错误点1： 没有利用helper function return index，而是每次return得到的string
 直接return 左右的index再比较得到最长的，最后return s[left, right + 1]
+错误点2: python string immutable，所以必须return index，最后才能返回一个substring
 '''
 def longestPalindrome(self, s: str) -> str:
     start = end = 0
@@ -34,8 +35,7 @@ def findLengest(self, s, left, right):
     
     return left + 1, right - 1
         
-
-
+        
 '''
 6. ZigZag Conversion
 解法：建立numRows长度的array来记录每一行的char
@@ -749,14 +749,14 @@ def setZeroes(self, matrix: List[List[int]]) -> None:
             matrix[0][j] = 0
             matrix[i][0] = 0
 
-    #根据上面的标记对 1- n-1行进行改变
+    #根据上面的标记对 1 - n-1行进行改变
     for row in range(1, n):
         if matrix[row][0] != 0:
             continue
         for col in range(m):
             matrix[row][col] = 0
 
-    #根据上面的标记对 1- m-1列进行改变
+    #根据上面的标记对 1 - m-1列进行改变
     for col in range(1, m):
         if matrix[0][col] != 0:
             continue
