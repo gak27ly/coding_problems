@@ -3,8 +3,11 @@
 # 28, 29, 31, 33, 34, 35, 36, 38, 39, 40, 41, 43, 46, 47, 48 
 
 '''
-需重做： 6, 5, 20, 22 
-26 -48
+需重做： 24, (26, 27)
+33, 49, 50, 53, 55, 56, 57,  - 100
+61 66 67 69 75 80 81 88 91 92 82 95 96 98
+
+
 '''
 
 '''
@@ -202,13 +205,14 @@ def merge(self, left, right, temp):
 利用更清晰的变量名称来帮助思考,完成一轮交换位置后，
 将变量按位置向后移动
 二刷过
+错误点： 没有考虑到三个点的情况
 '''
 def swapPairs(self, head):
     # write your code here
     if head is None or head.next is None:
         return head
     
-    prev = ListNode(0, head)
+    prev = ListNode(0)
     dummy = prev
     
     while head and head.next:
@@ -229,6 +233,7 @@ def swapPairs(self, head):
 28. strstr: 找到string中needle string最先出现的位置
 解法： 在string中按照起始点查找i: i + len(needle)
 time: O(n)
+直接在i之后截取相同长度的字符串与needle比较
 '''
 
 def strStr(self, haystack: str, needle: str) -> int:
@@ -282,6 +287,7 @@ def nextPermutation(self, nums: List[int]) -> None:
 注意点：二分法的结束条件 start + 1 < end
 避免产生 [1, 2] 中mid只能取到start的情况而产生死循环
 time: O(logn)
+循环中需要考虑等于target的情况
 '''
 def search(self, nums: List[int], target: int) -> int:
     if not nums or len(nums) == 0:
@@ -573,30 +579,44 @@ def helper(self, n, rows, count, dia, antiDia):
 '''
 '''
 56. Merge Intervals
-排序后判断是否overlap，有的话扩展右边界， 没有就加入答案.
+先加入第一个interval， 再看后面的interval是否有交集
+有交集的就update ans[-1]点的右边界
 '''
-def merge(self, intervals: List[List[int]]) -> List[List[int]]:
-    if not intervals or len(intervals) == 0:
-        return []
-    intervals = sorted(intervals, key = lambda x : x[0])
-    res = []
-    
-    left = intervals[0][0]
-    right = intervals[0][1]
-    
-    print(intervals)
-    for i in range(1, len(intervals)):
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        if not intervals or len(intervals) == 0:
+            return []
+        intervals = sorted(intervals, key = lambda x : x[0])
+        ans = [intervals[0]]
         
-        if right < intervals[i][0]:
-            res.append([left, right])
-            left = intervals[i][0]
-            right = intervals[i][1]
+        for i in range(1, len(intervals)):
+            if intervals[i][0] > ans[-1][1]:
+                ans.append(intervals[i])
+            else:
+                ans[-1][1] = max(intervals[i][1], ans[-1][1])
+        return ans
+
+'''
+57. Insert Interval
+方法1: 找到位置插入新interval
+再对所有元素按56题进行merge
+方法2: 找到需要merge的元素，进行merge. 其他元素按顺序加入res中
+'''
+def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+    res = []
+    if not intervals:
+        res.append(newInterval)
+        return res
+    i = 0
+    while i < len(intervals) and intervals[i][0] < newInterval[0]:
+        i += 1
+    intervals.insert(i, newInterval)
+    for interval in intervals:
+        if not res or res[-1][1] < interval[0]:
+            res.append(interval)
         else:
-            right = max(intervals[i][1], right)
-            
-    res.append([left, right])
-    
+            res[-1][1] = max(interval[1], res[-1][1])      
     return res
+
 '''
 58. Length of Last Word
 找到最后一个char的位置，再找最后一个space的位置，注意找不到这个位置的情况。

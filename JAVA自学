@@ -1,0 +1,34 @@
+JAVA自学
+
+基础知识
+
+网络知识：TCP/IP HTTP/HTTPS
+基础设计模式
+
+---
+工具
+
+操作系统： Linux(Ubuntu)
+version control: Git
+CI:	jenkins
+JAVA项目管理工具： Maven
+
+
+---
+框架
+
+spring + springmvc + mybatis
+spring boot
+
+---
+数据库
+
+SQL: MYSQL
+NoSQL: Redis Memcached mongodb
+
+---
+架构
+
+分布式/微服务
+spring cloud
+rpc 通信
