@@ -1,0 +1,14 @@
+
+JAVA Notes
+1. JAVA pass by value，当传入一个object时候，也只是传入了这个object的reference，这个reference被复制后传入, 通过复制的reference我们可以access同一个object.
+2. 用super()来call parent class的constructor. 也可用this(parameter) 来call其他的constructor. 二者不能同时出现.
+可以根据parent class的consturctor来添加parameter
+
+3. interface的使用可以避免双重继承的出现，interface中定义的method没有body，需要被implement它的class重写
+4. override是对继承来的method的重写，overload是指一个method有不同的parameter数量，类型和顺序. return type does not matter!!!
+5. static variable是本class所有method共有的，static method中不能使用instance variable因为static method并不知道这个instance variable在哪个object中
+6. format("I have %.2f bugs to fix.", 476578.25489)
+%[flags][width][.precision]type
+
+7. java.util.Date for current date, java.util.Calendar for date manipulation
+Calendar cal = Calendar.getInstance(); (page 304 of Head First Java)

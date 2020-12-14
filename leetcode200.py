@@ -1012,3 +1012,50 @@ def merge(self, p1, p2):
     if p2:
         tail.next = p2
     return dummy.next
+<<<<<<< HEAD
+=======
+
+'''
+152. Maximum Product Subarray
+需要记录当前最小值
+'''
+def maxProduct(self, nums: List[int]) -> int:
+    if not nums or len(nums) == 0:
+        return 0
+    
+    n = len(nums)
+    currMax = nums[0]
+    currMin = nums[0]
+    product = nums[0]
+    
+    for i in range(1, n):
+        currMax, currMin = max(currMax * nums[i], nums[i], currMin * nums[i]), min(currMax * nums[i], nums[i], currMin * nums[i])
+        product = max(currMax, product)
+    return product
+
+'''
+153. Find Minimum in Rotated Sorted Array
+解法： 二分法排除不可能的区间
+'''
+
+'''
+154. Find Minimum in Rotated Sorted Array II
+多考虑一个如何去重的问题
+'''
+def findMin(self, nums: List[int]) -> int:        
+    if not nums or len(nums) == 0:
+        return -1
+    start, end = 0, len(nums) - 1
+    
+    while start + 1 < end:
+        mid = (start + end) // 2
+        if nums[mid] < nums[end]:
+            end = mid
+        elif nums[mid] > nums[end]:
+            start = mid
+        else:
+            while end > mid and nums[end] == nums[mid]:
+                end -= 1
+    
+    return min(nums[start], nums[end])
+>>>>>>> ae5df7c6a2b24dbfa6acd63b31be73dbc750f79e

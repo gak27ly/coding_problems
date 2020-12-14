@@ -156,7 +156,7 @@ def quick_select(nums, start, end, k):
         if k <= right:
             quick_select(nums, start, right, k)
         if k > left:
-            quick_select(nums, left, end, k)
+            quick_select(nums, left, end, k - (left - start))
         return nums[k]
         
 
