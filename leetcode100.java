@@ -284,3 +284,54 @@ private void dfs(String curr, int index, String digits, List res, HashMap<Charac
         }
     }
 }
+
+/*
+19. Remove Nth Node From End of List
+*/
+public ListNode removeNthFromEnd(ListNode head, int n) {
+    if (head == null) return null;
+    ListNode dummy = new ListNode(0);
+    dummy.next = head;
+    ListNode slow = dummy;
+    ListNode fast = dummy;
+    
+    for (int i = 0; i < n; i++){
+        fast = fast.next;
+    }
+    
+    while (fast != null && fast.next != null){
+        slow = slow.next;
+        fast = fast.next;
+    }
+
+    slow.next = slow.next.next;
+    return dummy.next;      
+}
+
+/*
+20. Valid Parentheses
+*/
+public boolean isValid(String s) {
+    if (s == null || s.length() <= 1) return false;
+    if (s.length() % 2 != 0) return false;
+    
+    HashMap<Character, Character> mapping = new HashMap<Character, Character>();
+    Stack<Character> stack = new Stack<Character>();
+    mapping.put(')' , '(');
+    mapping.put(']' , '[');
+    mapping.put('}' , '{');
+    
+    
+    
+    for (int i = 0; i < s.length(); i++){
+        char c = s.charAt(i);
+        if (!mapping.containsKey(c))
+            stack.push(c);
+        
+        else{
+
+            if (stack.isEmpty() || mapping.get(c) != stack.pop()) return false;
+        }
+    }
+    return stack.isEmpty();
+}

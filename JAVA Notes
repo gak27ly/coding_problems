@@ -12,3 +12,91 @@ JAVA Notes
 
 7. java.util.Date for current date, java.util.Calendar for date manipulation
 Calendar cal = Calendar.getInstance(); (page 304 of Head First Java)
+
+8. java.util.Scanner
+Scanner(InputStream in)
+constructs a Scanner object from the given input stream.
+String nextLine()
+String next()
+reads the next word of input (delimited by whitespace).
+int nextInt()
+double nextDouble()
+boolean hasNext()
+boolean hasNextInt()
+boolean hasNextDouble()
+
+static Console console() 6
+returns a Console object for interacting with the user through a
+console window if such interaction is possible, null otherwise.
+java.io.Console
+static char[] readPassword(String prompt, Object... args)
+static String readLine(String prompt, Object... args)
+displays the prompt and reads the user input until the end of the input
+line. The args parameters can be used to supply formatting arguments,
+as described in the next section.
+
+
+
+Table 3.5 Conversions for printf Conversion Character
+Type                     Example
+d Decimal integer           159
+x Hexadecimal integer       9f
+o Octal integer             237
+f Fixed-point floatingpoint 15.9
+e Exponential floatingpoint 1.59e+01
+g General floating-point
+a Hexadecimal floating      0x1.fccdp3
+s String                    Hello
+c Character                 H
+b boolean                   true
+h Hash code                 42628b2
+tx or Tx Date and ti
+Obsolete, use the java.time classes instead—see Chapter 6 of Volume II
+% The percent symbol        %
+n The platform-dependentline separator
+
+
+To read from a file, construct a Scanner object like this:
+Scanner in = new Scanner(Path.of("myfile.txt"), StandardCharsets.UTF_8);
+
+If the file name contains backslashes, remember to escape each of them with
+an additional backslash: "c:\\mydirectory\\myfile.txt".
+
+
+
+To write to a file, construct a PrintWriter object. In the constructor,
+supply the file name and the character encoding:
+PrintWriter out = new PrintWriter("myfile.txt", StandardCharsets.UTF_8);
+If the file does not exist, it is created. You can use the print, println,
+and printf commands as you did when printing to System.out.
+
+
+java.util.Scanner 5
+Scanner(Path p, String encoding)
+constructs a Scanner that reads data from the given path, using the
+given character encoding.
+Scanner(String data)
+constructs a Scanner that reads data from the given string.
+
+java.io.PrintWriter 1.1
+PrintWriter(String fileName)
+constructs a PrintWriter that writes data to the file with the given
+file name.
+
+
+
+The keyword this refers to the implicit parameter of a method. However,
+this keyword has a second meaning.
+If the first statement of a constructor has the form this(. . .), then the
+constructor calls another constructor of the same class. Here is a typical
+example:
+public Employee(double s)
+{
+	// calls Employee(String, double)
+	this("Employee #" + nextId, s);
+	nextId++;
+}
+When you call new Employee(60000), the Employee(double)
+constructor calls the Employee(String, double) constructor.
+Using the this keyword in this manner is useful—you only need to write
+common construction code once.
