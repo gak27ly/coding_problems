@@ -321,8 +321,6 @@ public boolean isValid(String s) {
     mapping.put(']' , '[');
     mapping.put('}' , '{');
     
-    
-    
     for (int i = 0; i < s.length(); i++){
         char c = s.charAt(i);
         if (!mapping.containsKey(c))
@@ -334,4 +332,53 @@ public boolean isValid(String s) {
         }
     }
     return stack.isEmpty();
+}
+
+/*
+22. Generate Parentheses
+*/
+
+public List<String> generateParenthesis(int n) {
+    ArrayList<String> res = new ArrayList();
+    dfs(0, 0, n, "", res);
+    return res;    
+}
+
+private void dfs(int left, int right, int n, String combination, ArrayList res){
+    if (left > n || right > n)
+        return;
+    
+    if (right > left){
+        return;
+    }
+    
+    if (right == n && left == n){
+        res.add(combination);
+        return;
+    }
+    
+    dfs(left + 1, right, n, combination + "(", res);
+    dfs(left, right + 1, n, combination + ")", res);
+}
+
+/*
+24. Swap Nodes in Pairs
+*/
+public ListNode swapPairs(ListNode head) {
+    if (head == null || head.next == null) return head;
+    ListNode dummy = new ListNode(0);
+    ListNode pre = dummy;
+    ListNode l1 = head;
+    ListNode l2 = head.next;
+
+    while (l1 != null && l2 != null){
+        pre.next = l2;
+        l1.next = l2.next;
+        l2.next = l1;
+        pre = l1;
+        l1 = l1.next;
+        if (l1 != null)
+            l2 = l1.next;
+    }
+    return dummy.next;
 }
