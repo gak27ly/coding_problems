@@ -32,3 +32,10 @@ NoSQL: Redis Memcached mongodb
 分布式/微服务
 spring cloud
 rpc 通信
+
+
+
+
+.java -> java compiler -> .class(bytecode) -> JMV -> instruction code -> CPU
+
+

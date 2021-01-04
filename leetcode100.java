@@ -382,3 +382,161 @@ public ListNode swapPairs(ListNode head) {
     }
     return dummy.next;
 }
+
+/*
+26. Remove Duplicates from Sorted Array
+解法：先定下前点表示已经排好序的位置i
+从后面找到一个大于nums[i]的数字放到i+1的位置.
+*/
+
+public int removeDuplicates(int[] nums) {
+            
+    if (nums == null ||  nums.length == 0) return 0;
+    
+    int i = 0;
+    
+    for (int j = 1; j < nums.length; j++){
+        if (nums[i] < nums[j]){
+            i++;
+            nums[i] = nums[j];
+        }
+    }
+    return i + 1;
+}
+
+/*
+27. Remove Element
+解法： i位置为已经排好序的位置，把j位置的非val值传给i位置
+只有当i位置收到新的值时才会移动到下一个位置
+*/
+
+public int removeElement(int[] nums, int val) {
+    if (nums == null) return 0;
+    int i = 0;
+
+    for (int j = 0; j < nums.length; j++){
+        if (nums[j] != val){
+            nums[i] = nums[j];
+            i++;
+        }
+    }
+    return i;
+}
+
+/*
+28. Implement strStr()
+*/
+
+public int strStr(String haystack, String needle) {
+    if (haystack == null || needle == null) return -1;
+
+    int nLen = needle.length();
+    for (int i = 0; i < haystack.length() - nLen + 1; i++){
+        int j = 0;
+        for (j = 0; j < nLen; j++){
+            if (needle.charAt(j) != haystack.charAt(i + j)){
+                break;
+            }
+        }
+        if (j == nLen) 
+            return i;
+    }
+    return -1;
+}
+
+/*
+33. Search in Rotated Sorted Array
+*/
+public int search(int[] nums, int target) {
+    if (nums == null || nums.length == 0)
+        return -1;
+    int start = 0;
+    int end = nums.length - 1;
+
+    while (start + 1 < end){
+        int mid = start + (end - start) / 2;
+        if (nums[mid] > nums[end]){
+            if (nums[start] <= target && target <= nums[mid])
+                end = mid;
+            else
+                start = mid;
+        }
+        else{
+            if (nums[mid] <= target && target <= nums[end])
+                start = mid;
+            else
+                end = mid;
+        }
+    }
+    if (nums[start] == target) 
+        return start;
+    if (nums[end] == target)
+        return end;
+    return -1;
+}
+
+/*
+31. Next Permutation
+*/
+
+public void nextPermutation(int[] nums) {
+    int i = nums.length - 1;
+    while (i >= 1 && nums[i] <= nums[i - 1])
+        i--;
+    if (i == 0) {
+        reverse(nums, 0, nums.length - 1);
+        return; 
+    }
+
+    for (int j = nums.length - 1; j > i - 1; j--){
+        if (nums[j] > nums[i - 1]){
+            int temp = nums[i - 1];
+            nums[i - 1] = nums[j];
+            nums[j] = temp;
+            break;
+        }
+    }
+    reverse(nums, i, nums.length - 1);
+}
+
+private void reverse(int[] nums, int start, int end){
+    while (start < end){
+        int temp = nums[start];
+        nums[start] = nums[end];
+        nums[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+/*
+39. Combination Sum
+*/
+
+public List<List<Integer>> combinationSum(int[] candidates, int target) {
+    if (candidates == null) return null;
+    Arrays.sort(candidates);
+    List<List<Integer>> res = new ArrayList<>();
+    dfs(candidates, 0, target, new ArrayList<>(), res);
+    return res;
+}
+
+private void dfs(int[] nums, 
+                 int index, 
+                 int target, 
+                 List<Integer>combination, 
+                 List<List<Integer>> res){
+    if (target < 0)
+        return;
+
+    if (target == 0){
+        res.add(new ArrayList<>(combination));
+        return;
+    }
+
+    for (int i = index; i < nums.length; i++){
+        combination.add(nums[i]);
+        dfs(nums, i, target - nums[i], combination, res);
+        combination.remove(combination.size() - 1);
+    }    
+}
