@@ -540,3 +540,66 @@ private void dfs(int[] nums,
         combination.remove(combination.size() - 1);
     }    
 }
+
+/*
+43. Multiply Strings
+解法： 利用相乘的原理先将数字两辆相乘放入数组，再处理进位
+*/
+public String multiply(String num1, String num2) {
+    if (num1.equals("0") || num2.equals("0"))
+        return "0";
+    int[] res = new int[num1.length() + num2.length()];
+    for (int i = 0; i < num2.length(); i++){
+        int a = num2.charAt(i) - '0';
+        for (int j = 0; j < num1.length(); j++){
+            int b = num1.charAt(j) - '0';
+            res[i + j + 1] += a * b;
+        }
+    }
+
+    for (int i = res.length - 1; i > 0; i--){
+        res[i - 1] += res[i] / 10;
+        res[i] = res[i] % 10;
+    }
+
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < res.length; i++){
+        if (res[i] == 0 && sb.length() == 0)
+            continue;
+        sb.append(res[i]);
+    }
+    return sb.toString();
+}
+
+/*
+46. Permutations
+用一个boolean[]来记录被visited过的点即可，比arraylist速度快
+*/
+public List<List<Integer>> permute(int[] nums) {
+    List<List<Integer>> res = new ArrayList<>();
+
+    dfs(nums, new boolean[nums.length], new ArrayList(), res);
+    return res;
+}
+
+private void dfs(int[] nums, 
+                 boolean[] visited, 
+                 List<Integer> permutation, 
+                 List<List<Integer>> res) {
+
+    if (permutation.size() == nums.length){
+        res.add(new ArrayList<Integer>(permutation));
+        return;
+    }
+
+    for (int i = 0; i < nums.length; i++){
+        if (visited[i])
+            continue;
+
+        visited[i] = true;
+        permutation.add(nums[i]);
+        dfs(nums, visited, permutation, res);
+        visited[i] = false;
+        permutation.remove(permutation.size() - 1);
+    }
+}
