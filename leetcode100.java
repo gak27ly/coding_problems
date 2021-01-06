@@ -540,3 +540,61 @@ private void dfs(int[] nums,
         combination.remove(combination.size() - 1);
     }    
 }
+
+/*
+40. Combination Sum II
+*/
+
+public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+    List<List<Integer>> res = new ArrayList<>();
+    Arrays.sort(candidates);
+    dfs(candidates, 0, target, new ArrayList<Integer>(), res);
+    return res;
+}
+
+private void dfs(int[] nums,
+                 int index,
+                 int target, 
+                 List<Integer> combination, 
+                 List<List<Integer>>res){
+    if (target == 0){
+        res.add(new ArrayList<>(combination));
+        return;
+    }
+
+    if (target < 0)
+        return;
+    for (int i = index; i< nums.length; i++){
+        if (i != index && nums[i] == nums[i - 1])
+            continue;
+        combination.add(nums[i]);
+        dfs(nums, i + 1, target - nums[i], combination, res);
+        combination.remove(combination.size() - 1);
+    }
+}
+
+/*
+42. Trapping Rain Water
+two pointer低的挡板决定当前位置的水量上限.
+*/
+
+public int trap(int[] height) {
+    int lMax = height[0];
+    int rMax = height[height.length - 1];
+    int res = 0;
+    int l = 0;
+    int r = height.length - 1;
+
+    while (l < r){
+        if (lMax < rMax){
+            res += lMax - height[l];
+            l += 1;
+            lMax = Math.max(lMax, height[l]);
+        } else{
+            res += rMax - height[r];
+            r -= 1;
+            rMax = Math.max(rMax, height[r]);
+        }
+    }
+    return res;
+}
