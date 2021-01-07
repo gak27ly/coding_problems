@@ -362,6 +362,49 @@ private void dfs(int left, int right, int n, String combination, ArrayList res){
 }
 
 /*
+23. Merge k Sorted Lists
+解法： 利用divide&conquer
+也可以从头开始，两两相连，连接k次
+*/
+public ListNode mergeKLists(ListNode[] lists) {
+    if (lists == null || lists.length == 0)
+        return null;
+    return mergeListRange(0, lists.length - 1, lists);
+}
+
+private ListNode mergeListRange(int start, int end, ListNode[] lists) {
+    if (start == end){
+        return lists[start];
+    }
+    int mid = start + (end - start) / 2;
+
+    ListNode left = mergeListRange(start, mid, lists);
+    ListNode right = mergeListRange(mid + 1, end, lists);
+    return mergeLists(left, right);
+}
+
+private ListNode mergeLists(ListNode left, ListNode right) {
+    ListNode dummy = new ListNode(0);
+    ListNode head = dummy;
+    while (left != null && right != null) {
+        if (left.val < right.val){
+            head.next = left;
+            left = left.next;
+        } else {
+            head.next = right;
+            right = right.next;
+        }
+        head = head.next;
+    }
+    if (left != null)
+        head.next = left;
+    if (right != null)
+        head.next = right;
+
+    return dummy.next;
+}
+
+/*
 24. Swap Nodes in Pairs
 */
 public ListNode swapPairs(ListNode head) {
@@ -578,8 +621,9 @@ private void dfs(int[] nums,
 42. Trapping Rain Water
 two pointer低的挡板决定当前位置的水量上限.
 */
-
 public int trap(int[] height) {
+    if (height == null || height.length == 0)
+        return 0;
     int lMax = height[0];
     int rMax = height[height.length - 1];
     int res = 0;
@@ -661,4 +705,142 @@ private void dfs(int[] nums,
         visited[i] = false;
         permutation.remove(permutation.size() - 1);
     }
+}
+
+/*
+47. Permutations II
+*/
+public List<List<Integer>> permuteUnique(int[] nums) {
+    List<List<Integer>> res = new ArrayList();
+    Arrays.sort(nums);
+    boolean[] visited = new boolean[nums.length];
+    dfs(nums, visited, new ArrayList<Integer>(), res);
+    return res;
+}
+
+private void dfs(int[] nums,
+                boolean[] visited,
+                List<Integer> permutation,
+                List<List<Integer>> res){
+
+    if (permutation.size() == nums.length){
+        res.add(new ArrayList<Integer>(permutation));
+        return;
+    }
+
+    for (int i = 0; i < nums.length; i++){
+        if (visited[i])
+            continue;
+        //判断相同的前一个数字是否已被取用，若没有则不能取用当前数字
+        if (i > 0 && nums[i] == nums[i - 1] && !visited[i - 1])
+            continue;
+        visited[i] = true;
+        permutation.add(nums[i]);
+        dfs(nums, visited, permutation, res);
+        visited[i] = false;
+        permutation.remove(permutation.size() - 1);
+    }
+}
+
+/*
+48. Rotate Image
+简单
+*/
+
+public void rotate(int[][] matrix) {
+
+    for (int i = 0; i < matrix.length; i++){
+        for (int j = i + 1; j < matrix[0].length; j++){
+            int temp = matrix[i][j];
+            matrix[i][j] = matrix[j][i];
+            matrix[j][i] = temp; 
+        }
+    }
+
+    int start = 0;
+    int end = matrix[0].length - 1;
+
+    for (int i = 0; i < matrix.length; i++){
+        reverse(matrix[i], start, end);
+    }
+}
+
+private void reverse(int[] row, int start, int end){
+    while (start < end){
+        int temp = row[start];
+        row[start] = row[end];
+        row[end] = temp;
+        start += 1;
+        end -= 1;
+    }
+}
+
+/*
+49. Group Anagrams
+
+*/
+
+public List<List<String>> groupAnagrams(String[] strs) {
+    if (strs == null || strs.length == 0)
+        return new ArrayList<List<String>>();
+    HashMap<String, List<String>> map = new HashMap<String, List<String>>();
+
+    for (int i = 0; i < strs.length; i++){
+        char[] chs = strs[i].toCharArray();
+        Arrays.sort(chs);
+        String key = String.valueOf(chs);
+        if (!map.containsKey(key)){
+            map.put(key, new ArrayList<String>());
+        } 
+        map.get(key).add(strs[i]);
+    }
+    return new ArrayList<List<String>>(map.values());
+}
+
+/*
+51. N-Queens
+*/
+
+public List<List<String>> solveNQueens(int n) {
+    if (n <= 0) return new ArrayList<List<String>>();
+    List<List<String>> res = new ArrayList();
+    dfs(n, new ArrayList<Integer>(), res);
+    return res;
+}
+
+private void dfs(int n, List<Integer> cols, List<List<String>> res) {
+    if (cols.size() == n) {
+        res.add(draw(cols));
+        return;
+    }
+    for (int row = 0; row < n; row++) {
+        if (!isValid(cols, row))
+            continue;
+        cols.add(row);
+        dfs(n, cols, res);
+        cols.remove(cols.size() - 1);
+    }
+}
+
+private boolean isValid(List<Integer> cols, int newRow) {
+
+    for (int i = 0; i < cols.size(); i++){
+        if (cols.get(i) == newRow)
+            return false;
+        if (Math.abs(cols.get(i) - newRow) == Math.abs(i - cols.size()))
+            return false;
+    }
+    return true;
+}
+
+private List<String> draw(List<Integer> cols){
+    List<String> res = new ArrayList<String>();
+    for (int i = 0; i < cols.size(); i++){
+        StringBuilder sb = new StringBuilder();
+        for (int j = 0; j < cols.size(); j++){
+            sb.append(cols.get(i) == j ? "Q" : ".");
+        }
+        res.add(sb.toString());
+    }
+    return res;
 }
