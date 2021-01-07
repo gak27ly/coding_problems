@@ -844,3 +844,34 @@ private List<String> draw(List<Integer> cols){
     }
     return res;
 }
+
+/*
+50. Pow(x, n)
+解法： 二分法
+*/
+
+public double myPow(double x, int n) {
+    if (x == 0 || n == 0) 
+        return 1;
+
+    long m = n;
+    if (m < 0){
+        x = 1 / x;
+        m = -m;
+    }
+
+    double res = 1;
+    double num = x;
+    while (m > 0){
+        if (m % 2 == 1){
+            res *= num;
+            m -= 1;
+        }
+
+        num = num * num;
+        m = m / 2;
+    }
+
+    return res;
+}
+
