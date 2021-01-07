@@ -542,6 +542,65 @@ private void dfs(int[] nums,
 }
 
 /*
+<<<<<<< HEAD
+40. Combination Sum II
+*/
+
+public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+    List<List<Integer>> res = new ArrayList<>();
+    Arrays.sort(candidates);
+    dfs(candidates, 0, target, new ArrayList<Integer>(), res);
+    return res;
+}
+
+private void dfs(int[] nums,
+                 int index,
+                 int target, 
+                 List<Integer> combination, 
+                 List<List<Integer>>res){
+    if (target == 0){
+        res.add(new ArrayList<>(combination));
+        return;
+    }
+
+    if (target < 0)
+        return;
+    for (int i = index; i< nums.length; i++){
+        if (i != index && nums[i] == nums[i - 1])
+            continue;
+        combination.add(nums[i]);
+        dfs(nums, i + 1, target - nums[i], combination, res);
+        combination.remove(combination.size() - 1);
+    }
+}
+
+/*
+42. Trapping Rain Water
+two pointer低的挡板决定当前位置的水量上限.
+*/
+
+public int trap(int[] height) {
+    int lMax = height[0];
+    int rMax = height[height.length - 1];
+    int res = 0;
+    int l = 0;
+    int r = height.length - 1;
+
+    while (l < r){
+        if (lMax < rMax){
+            res += lMax - height[l];
+            l += 1;
+            lMax = Math.max(lMax, height[l]);
+        } else{
+            res += rMax - height[r];
+            r -= 1;
+            rMax = Math.max(rMax, height[r]);
+        }
+    }
+    return res;
+}
+
+/*
 43. Multiply Strings
 解法： 利用相乘的原理先将数字两辆相乘放入数组，再处理进位
 */
@@ -603,6 +662,7 @@ private void dfs(int[] nums,
         permutation.remove(permutation.size() - 1);
     }
 }
+<<<<<<< HEAD
 
 /*
 50. Pow(x, n)
@@ -633,3 +693,5 @@ public double myPow(double x, int n) {
 
     return res;
 }
+=======
+>>>>>>> 368dd48c2822f3201c6c4519034a05a42a2bfa24
