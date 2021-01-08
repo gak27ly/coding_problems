@@ -872,3 +872,63 @@ private List<String> draw(List<Integer> cols){
     }
     return res;
 }
+
+/*
+54. Spiral Matrix
+简单题，注意loop结束条件
+*/
+public List<Integer> spiralOrder(int[][] matrix) {
+    if (matrix == null || matrix.length == 0)
+        return new ArrayList<Integer>();
+    int left = 0;
+    int right = matrix[0].length - 1;
+    int top = 0;
+    int bot = matrix.length - 1;
+    int dir = 0;
+    List<Integer> res = new ArrayList<Integer>();
+
+    while (left <= right && top <= bot){
+        if (dir == 0){
+            for (int i = left; i < right + 1; i++) 
+                res.add(matrix[top][i]);
+            top++;
+        } else if (dir == 1) {
+            for (int i = top; i < bot + 1; i++) 
+                res.add(matrix[i][right]);
+            right--;
+
+        } else if (dir == 2) {
+            for (int i = right; i > left - 1; i--)
+                res.add(matrix[bot][i]);
+            bot--;
+        } else if (dir == 3) {
+            for (int i = bot; i > top - 1; i--)
+                res.add(matrix[i][left]);
+            left++;
+        }
+        dir = (dir + 1) % 4;
+    }
+    return res;
+}
+
+/*
+56. Merge Intervals
+解法：对起始点进行排序，然后利用stack或者linkedlist的getLast()
+来获取之前已加入的interval的结尾范围，再判断是否合并.
+*/
+public int[][] merge(int[][] intervals) {
+    if (intervals == null || intervals.length == 0)
+        return new int[0][0];
+
+    LinkedList<int[]> res = new LinkedList<>();
+    Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+
+    for (int[] interval : intervals) {
+        if (res.size() == 0 || interval[0] > res.getLast()[1])
+            res.add(interval);
+        else
+            res.getLast()[1] = Math.max(res.getLast()[1], interval[1]);
+    }
+
+    return res.toArray(new int[res.size()][2]);        
+}
