@@ -662,7 +662,6 @@ private void dfs(int[] nums,
         permutation.remove(permutation.size() - 1);
     }
 }
-<<<<<<< HEAD
 
 /*
 50. Pow(x, n)
@@ -693,5 +692,4 @@ public double myPow(double x, int n) {
 
     return res;
 }
-=======
->>>>>>> 368dd48c2822f3201c6c4519034a05a42a2bfa24
+
