@@ -310,6 +310,7 @@ public ListNode removeNthFromEnd(ListNode head, int n) {
 
 /*
 20. Valid Parentheses
+再做
 */
 public boolean isValid(String s) {
     if (s == null || s.length() <= 1) return false;
@@ -365,6 +366,7 @@ private void dfs(int left, int right, int n, String combination, ArrayList res){
 23. Merge k Sorted Lists
 解法： 利用divide&conquer
 也可以从头开始，两两相连，连接k次
+再做
 */
 public ListNode mergeKLists(ListNode[] lists) {
     if (lists == null || lists.length == 0)
@@ -488,37 +490,6 @@ public int strStr(String haystack, String needle) {
 }
 
 /*
-33. Search in Rotated Sorted Array
-*/
-public int search(int[] nums, int target) {
-    if (nums == null || nums.length == 0)
-        return -1;
-    int start = 0;
-    int end = nums.length - 1;
-
-    while (start + 1 < end){
-        int mid = start + (end - start) / 2;
-        if (nums[mid] > nums[end]){
-            if (nums[start] <= target && target <= nums[mid])
-                end = mid;
-            else
-                start = mid;
-        }
-        else{
-            if (nums[mid] <= target && target <= nums[end])
-                start = mid;
-            else
-                end = mid;
-        }
-    }
-    if (nums[start] == target) 
-        return start;
-    if (nums[end] == target)
-        return end;
-    return -1;
-}
-
-/*
 31. Next Permutation
 */
 
@@ -553,6 +524,39 @@ private void reverse(int[] nums, int start, int end){
 }
 
 /*
+33. Search in Rotated Sorted Array
+*/
+public int search(int[] nums, int target) {
+    if (nums == null || nums.length == 0)
+        return -1;
+    int start = 0;
+    int end = nums.length - 1;
+
+    while (start + 1 < end){
+        int mid = start + (end - start) / 2;
+        if (nums[mid] > nums[end]){
+            if (nums[start] <= target && target <= nums[mid])
+                end = mid;
+            else
+                start = mid;
+        }
+        else{
+            if (nums[mid] <= target && target <= nums[end])
+                start = mid;
+            else
+                end = mid;
+        }
+    }
+    if (nums[start] == target) 
+        return start;
+    if (nums[end] == target)
+        return end;
+    return -1;
+}
+
+
+
+/*
 39. Combination Sum
 */
 
@@ -585,7 +589,6 @@ private void dfs(int[] nums,
 }
 
 /*
-<<<<<<< HEAD
 40. Combination Sum II
 */
 
@@ -797,6 +800,36 @@ public List<List<String>> groupAnagrams(String[] strs) {
     return new ArrayList<List<String>>(map.values());
 }
 
+
+/*
+50. Pow(x, n)
+解法： 二分法
+*/
+
+public double myPow(double x, int n) {
+    if (x == 0 || n == 0) 
+        return 1;
+
+    long m = n;
+    if (m < 0){
+        x = 1 / x;
+        m = -m;
+    }
+
+    double res = 1;
+    double num = x;
+    while (m > 0){
+        if (m % 2 == 1){
+            res *= num;
+            m -= 1;
+        }
+
+        num = num * num;
+        m = m / 2;
+    }
+
+    return res;
+}
 /*
 51. N-Queens
 */
@@ -846,32 +879,89 @@ private List<String> draw(List<Integer> cols){
 }
 
 /*
-50. Pow(x, n)
-解法： 二分法
+57. Insert Interval
 */
+public int[][] insert(int[][] intervals, int[] newInterval) {
+    LinkedList<int[]> res = new LinkedList<int[]>();
+    if (intervals == null || intervals.length == 0) {
+        res.add(newInterval);
+        return res.toArray(new int[res.size()][2]);
 
-public double myPow(double x, int n) {
-    if (x == 0 || n == 0) 
-        return 1;
+    }
+    int index = 0;
+    int n = intervals.length;
+    int start = newInterval[0];
+    int end = newInterval[1];
 
-    long m = n;
-    if (m < 0){
-        x = 1 / x;
-        m = -m;
+    while (index < n && intervals[index][1] < newInterval[0]) {
+        res.add(intervals[index]);
+        index++;
+    }
+    if (index == n) {
+        res.add(newInterval);
+        return res.toArray(new int[res.size()][2]);
+    } 
+    start = Math.min(intervals[index][0], newInterval[0]);
+
+    while (index < n && intervals[index][0] <= newInterval[1]) {
+        end = Math.max(intervals[index][1], end);
+        index++;
     }
 
-    double res = 1;
-    double num = x;
-    while (m > 0){
-        if (m % 2 == 1){
-            res *= num;
-            m -= 1;
-        }
+    res.add(new int[] {start, end});
 
-        num = num * num;
-        m = m / 2;
+    while (index < n) {
+        res.add(intervals[index++]);
     }
 
-    return res;
+    return res.toArray(new int[res.size()][2]);
 }
 
+/*
+66. Plus One
+*/
+
+public int[] plusOne(int[] digits) {
+    if (digits == null || digits.length == 0)
+        return new int[] {};
+
+    int n = digits.length;
+
+    for (int i = n - 1; i >= 0; i--) {
+        if (digits[i] != 9) {
+            digits[i]++;
+            return digits;
+        }
+        digits[i] = 0;
+    }
+
+    int[] newInt = new int[n + 1];
+    newInt[0] = 1;
+    return newInt;
+}
+
+/*
+69. Sqrt(x)
+*/
+public int mySqrt(int x) {
+    if (x < 1)
+        return 0;
+
+    int start = 1;
+    int end = (int)Math.sqrt(Integer.MAX_VALUE);
+
+    while (start + 1 < end) {
+        int mid = start + (end - start) / 2;
+        if (mid * mid > x) {
+            end = mid;
+        } else if (mid * mid < x) {
+            start = mid;
+        } else {
+            return mid;
+        }
+    }
+
+    if (end * end <= x)
+        return end;
+    return start;
+}
