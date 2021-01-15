@@ -932,3 +932,53 @@ public int[][] merge(int[][] intervals) {
 
     return res.toArray(new int[res.size()][2]);        
 }
+
+
+/*
+77. Combinations
+*/
+
+public List<List<Integer>> combine(int n, int k) {
+
+    List<List<Integer>> res = new ArrayList<>();
+
+    dfs(n, k, 1, new ArrayList<Integer>(), res);
+    return res;
+}
+
+private void dfs(int n, int k, int startIndex, List<Integer> combination, List<List<Integer>> res) {
+
+    if (combination.size() == k) {
+        res.add(new ArrayList<Integer>(combination));
+        return;
+    }
+
+    for (int i = startIndex; i <= n; i++) {
+        combination.add(i);
+        dfs(n, k, i + 1, combination, res);
+        combination.remove(combination.size() - 1);
+    }
+}
+
+/*
+78. Subsets
+*/
+public List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> res = new ArrayList<List<Integer>>();
+    if (nums == null || nums.length == 0)
+        return res;
+    
+    dfs(nums, 0, new ArrayList<Integer>(), res);
+    return res;
+}
+
+private void dfs(int[] nums, int startIndex, List<Integer> subset, List<List<Integer>> res) {
+    
+    res.add(new ArrayList<Integer>(subset));
+    
+    for (int i = startIndex; i < nums.length; i++) {
+        subset.add(nums[i]);
+        dfs(nums, i + 1, subset, res);
+        subset.remove(subset.size() - 1);
+    }
+}
