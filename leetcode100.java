@@ -1107,3 +1107,335 @@ private void dfs(int[] nums, int startIndex, List<Integer> subset, List<List<Int
         subset.remove(subset.size() - 1);
     }
 }
+
+/*
+100. Same Tree
+简化前面的判断
+*/
+public boolean isSameTree(TreeNode p, TreeNode q) {
+    
+    if (p == null && q == null) {
+        return true;
+    } else if (p == null || q == null) {
+        return false;
+    }
+    
+    boolean sameLeft = isSameTree(p.left, q.left);
+    boolean sameRight = isSameTree(p.right, q.right);
+
+    return p.val == q.val && sameLeft && sameRight;
+}
+
+/*
+101. Symmetric Tree
+需要一个helper function来帮助判断两个点
+*/
+
+public boolean isSymmetric(TreeNode root) {
+    if (root  == null) return true;
+
+    return checkSymmetric(root.left, root.right);      
+}
+
+private boolean checkSymmetric(TreeNode leftNode, TreeNode rightNode) {
+    if (leftNode == null && rightNode == null) {
+        return true;
+    }
+    if (leftNode == null || rightNode == null) {
+        return false;
+    }
+
+    return leftNode.val == rightNode.val && checkSymmetric(leftNode.left, rightNode.right)
+        &&  checkSymmetric(leftNode.right, rightNode.left);
+
+
+}
+
+/*
+102. Binary Tree Level Order Traversal
+要把levelList加入res，res需要先initialize
+*/
+public List<List<Integer>> levelOrder(TreeNode root) {
+    List<List<Integer>> res = new ArrayList();
+    if (root == null) return res;
+    Queue<TreeNode> nodeQueue = new LinkedList();
+    nodeQueue.offer(root);
+
+    while(!nodeQueue.isEmpty()) {
+        int levelSize = nodeQueue.size();
+        List<Integer> levelList = new ArrayList();
+        for (int i = 0; i < levelSize; i++) {
+            TreeNode node = nodeQueue.poll();
+            if (node.left != null) {
+                nodeQueue.offer(node.left);
+            }
+            if (node.right != null) {
+                nodeQueue.offer(node.right);
+            }
+            levelList.add(node.val);
+        }
+        res.add(levelList);
+    }
+    return res;        
+}
+
+/*
+104. Maximum Depth of Binary Tree
+*/
+public int maxDepth(TreeNode root) {
+    if (root == null) return 0;
+    if (root.left == null && root.right == null) return 1;
+    
+    return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+}
+
+/*
+111. Minimum Depth of Binary Tree
+当一边没有点的时候要看旁边的subtree，直到找到leaf
+*/
+public int minDepth(TreeNode root) {
+    if (root == null) return 0;
+    if (root.left == null && root.right == null) return 1;
+    if (root.left == null) return minDepth(root.right) + 1;
+    if (root.right == null) return minDepth(root.left) + 1;
+
+    return Math.min(minDepth(root.left), minDepth(root.right)) + 1;
+}
+/*
+112. Path Sum
+如上题，需要保证有一条root到leaf的path
+*/
+
+public boolean hasPathSum(TreeNode root, int targetSum) {
+    if (root == null) return false;
+    if (root.left == null && root.right == null) return root.val == targetSum;
+    if (root.left == null) return hasPathSum(root.right, targetSum - root.val);
+    if (root.right == null) return hasPathSum(root.left, targetSum - root.val);
+    
+    return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val);
+}
+
+/*
+116. Populating Next Right Pointers in Each Node
+需要理解方法二
+*/
+
+public Node connect(Node root) {
+
+    if (root == null) return root;
+
+    Queue<Node> nodeQueue = new LinkedList();
+
+    nodeQueue.offer(root);
+
+    while (!nodeQueue.isEmpty()) {
+        int levelSize = nodeQueue.size();
+        for (int i = 0; i < levelSize; i++) {
+            Node node = nodeQueue.poll();
+            node.next = nodeQueue.peek();
+            if (i == levelSize - 1) {
+                node.next = null;
+            }
+            if (node.left != null) {
+                nodeQueue.offer(node.left);
+            }
+            if (node.right != null) {
+                nodeQueue.offer(node.right);
+            }
+        }
+    }
+    
+    return root;
+}
+
+public Node connect(Node root) {
+    Node answ = root;
+    Node tmpLeft;
+    while (root != null) {
+        tmpLeft = root.left;
+        while (root != null && root.left != null) {
+                root.left.next = root.right;
+            if (root.next != null)
+                root.right.next = root.next.left;
+            root = root.next;
+        }
+        root = tmpLeft;
+    }
+    return answ;
+}
+
+
+/*
+133. Clone graph
+nodeQueue.isEmpty 写成了 nodeQueue == null
+mapping.put(popedNode, new Node(popedNode.val)) 写到了for loop里面
+*/
+public Node cloneGraph(Node node) {
+    if (node == null) {
+        return node;
+    }
+
+    Map<Node, Node> mapping = new HashMap();
+    Queue<Node> nodeQueue = new LinkedList();
+
+    nodeQueue.offer(node);
+
+    while (!nodeQueue.isEmpty()) {
+        Node popedNode = nodeQueue.poll();
+        mapping.put(popedNode, new Node(popedNode.val));
+        for (Node neighbor : popedNode.neighbors) {
+            if (mapping.get(neighbor) == null) {
+                nodeQueue.offer(neighbor);
+            }
+        }
+    }
+
+    for (Node oldNode : mapping.keySet()) {
+        for (Node neighbor : oldNode.neighbors) {
+            mapping.get(oldNode).neighbors.add(mapping.get(neighbor));
+        }
+    }
+
+    return mapping.get(node);
+}
+
+
+/*
+199. Binary Tree Right Side View
+*/
+public List<Integer> rightSideView(TreeNode root) {
+    List<Integer> res = new ArrayList();
+    if (root == null) return res;
+
+    Queue<TreeNode> q = new LinkedList();
+
+    q.offer(root);
+    while (!q.isEmpty()) {
+        int levelSize = q.size();
+        while (levelSize > 0) {
+            levelSize--;
+            TreeNode node = q.poll();
+            if (levelSize == 0) {
+                res.add(node.val);
+            }
+            if (node.left != null) {
+                q.offer(node.left);
+            }
+            if (node.right != null) {
+                q.offer(node.right);
+            }
+        }
+    
+    }
+    return res;
+
+}
+
+/*
+200. Number of Islands
+注意需要立刻改变押入queue的点的值来保证不重复读取
+若不让改变值，则需要建立一个对应的boolean[][]来帮助判断是否visited
+*/
+public int numIslands(char[][] grid) {
+    int numOfIslands = 0;
+    if (grid == null || grid[0].length == 0) {
+        return numOfIslands;
+    }
+
+    for (int i = 0; i < grid.length; i++) {
+        for (int j = 0; j < grid[0].length; j++) {
+            if (grid[i][j] == '1') {
+                bfs(i, j, grid);
+                numOfIslands++;
+            }
+        }
+    }
+    return numOfIslands;
+}
+
+private void bfs(int i, int j, char[][] grid) {
+    Queue<Integer> rowQueue = new LinkedList();
+    Queue<Integer> colQueue = new LinkedList();
+    int[] rowDirection = {0, 0, 1, -1};
+    int[] colDirection = {1, -1, 0, 0};
+
+    rowQueue.offer(i);
+    colQueue.offer(j);
+    grid[i][j] = '0';
+
+    while (!rowQueue.isEmpty() && !colQueue.isEmpty()) {
+        int row = rowQueue.poll();
+        int col = colQueue.poll();
+
+        for (int k = 0; k < rowDirection.length; k++) {
+            int newRow = row + rowDirection[k];
+            int newCol = col + colDirection[k];
+            if (isValid(newRow, newCol, grid)) {
+                rowQueue.offer(newRow);
+                colQueue.offer(newCol);
+                grid[newRow][newCol] = '0';
+            }
+        }
+    }
+
+}
+
+private boolean isValid(int row, int col, char[][] grid) {
+    if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
+        return false;
+    }
+    return grid[row][col] == '1';
+}
+
+
+/*
+207. Course Schedule
+需注意Map读取时候的检查mapping.containsKey(classNum)
+*/
+
+public boolean canFinish(int numCourses, int[][] prerequisites) {
+    
+    Map<Integer, List<Integer>> mapping = new HashMap();
+    int[] inDegree = new int[numCourses];
+
+
+    for (int[] prerequisite : prerequisites) {
+        if(mapping.containsKey(prerequisite[1])) {
+            mapping.get(prerequisite[1]).add(prerequisite[0]);
+        } else {
+            mapping.put(prerequisite[1], new ArrayList(List.of(prerequisite[0])));
+        }
+        inDegree[prerequisite[0]]++;
+    }
+
+    bfs(mapping, inDegree);
+
+    for (int i = 0; i < inDegree.length; i++) {
+        if (inDegree[i] != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+private void bfs(Map<Integer, List<Integer>> mapping, int[] inDegree) {
+    Queue<Integer> q = new LinkedList();
+    for (int i = 0; i < inDegree.length; i++) {
+        if (inDegree[i] == 0) {
+            q.offer(i);
+        }
+    }
+
+    while (!q.isEmpty()) {
+        int classNum = q.poll();
+        if (!mapping.containsKey(classNum)) {
+            continue;
+        }
+        for (int nextClass : mapping.get(classNum)) {
+            inDegree[nextClass]--;
+            if (inDegree[nextClass] == 0) {
+                q.offer(nextClass);
+            } 
+        }
+    }
+}
