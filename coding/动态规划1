@@ -1,0 +1,34 @@
+三种适用和不适用动态规划的场景
+
+适用：
+1. 求最值 
+2. 方案总数
+3. 是否存在
+
+不适用：
+1. 求所有具体方案
+
+2. 输入数据无序
+
+3. 暴力算法时间复杂度已经是多项式级别
+
+example questions:
+
+word break I:
+
+word break II: 
+方案1: 用dynamic programming 进行剪枝
+如果 is_possible[i] == false, 直接return
+方案2: 直接使用memo[i]记录从位置i开始的后缀能被break出来的所有方案
+
+Palindrome Partitioning
+
+word break III:
+
+
+
+双序列型动态规划:
+题目会给出两个序列 长度m，n
+一般会开一个数组 f[m+1][n+1]
+
+f[i][j], 表示A的前i个，和B的前j个元素

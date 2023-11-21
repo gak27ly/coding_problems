@@ -1084,6 +1084,36 @@ public int mySqrt(int x) {
     return start;
 }
 
+/*
+75. Sort Colors
+*/
+public void sortColors(int[] nums) {
+    if (nums == null || nums.length == 0)
+        return;
+
+    int p1 = 0;
+    int p2 = 0;
+    int p3 = nums.length - 1;
+
+    while (p2 <= p3) {
+        if (nums[p2] == 0) {
+            swap(nums, p1, p2);
+            p1++;
+            p2++;
+        } else if (nums[p2] == 2) {
+            swap(nums, p2, p3);
+            p3--;
+        } else {
+            p2++;
+        }
+    }
+}
+
+private void swap(int[] nums, int a, int b) {
+    int temp = nums[a];
+    nums[a] = nums[b];
+    nums[b] = temp;
+}
 
 /*
 78. Subsets
@@ -1109,6 +1139,7 @@ private void dfs(int[] nums, int startIndex, List<Integer> subset, List<List<Int
 }
 
 /*
+<<<<<<< HEAD
 100. Same Tree
 简化前面的判断
 */
@@ -1438,4 +1469,42 @@ private void bfs(Map<Integer, List<Integer>> mapping, int[] inDegree) {
             } 
         }
     }
+=======
+79. Word Search
+*/
+public boolean exist(char[][] board, String word) {
+    if (word == null || word.length() == 0)
+        return true;
+    if (board == null || board.length == 0)
+        return false;
+
+    int m = board.length;
+    int n = board[0].length;
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (board[i][j] == word.charAt(0)) {
+                if (search(board, i, j, word, 0) == true)
+                    return true;
+            }
+        }
+    }
+    return false;
+}
+
+private boolean search(char[][]board, int i, int j, String word, int idx) {
+    if (idx == word.length())
+        return true;
+    if (i < 0 || j < 0 || i >= board.length || j >= board[0].length || board[i][j] != word.charAt(idx))
+        return false;
+
+    board[i][j] = '#';
+    boolean found = search(board, i + 1, j, word, idx + 1) || 
+                    search(board, i - 1, j, word, idx + 1) ||
+                    search(board, i, j + 1, word, idx + 1) ||
+                    search(board, i, j - 1, word, idx + 1);
+
+    board[i][j] = word.charAt(idx);
+    return found;
+>>>>>>> b110260... coding problems
 }

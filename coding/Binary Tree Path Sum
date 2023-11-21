@@ -1,0 +1,29 @@
+# Binary Tree Path Sum 
+# Your are given a binary tree in which each node contains a value. 
+# Design an algorithm to get all paths which sum to a given value. 
+# The path does not need to start or end at the root or a leaf,
+#  but it must go in a straight line down.
+
+def binaryTreePathSum2(self, root, target):
+    # write your code here
+    combination, res = [], []
+    self.helper(root, target, 0, combination, res)
+
+    return res
+        
+
+def helper(self, root, target, total, combination, res):
+    if not root:
+        return 
+    
+    total += root.val
+    
+    combination.append(root.val)
+# //只有当到leaf的时候才能加入ressult
+    if not root.left and not root.right and total == target:
+        res.append(combination[:])
+
+    self.helper(root.left, target, total, combination, res)
+    self.helper(root.right, target, total, combination, res)
+
+    combination.pop()

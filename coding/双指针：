@@ -1,0 +1,68 @@
+双指针：
+
+相向双指针：	O(n)
+partition: quick select, 三个部分
+
+1. reserse 类
+三步翻转法
+
+valid palindrome
+只要不是字母就跳过
+
+时间复杂度与最内层循环主体循环次数有关。
+
+follow up: 删除一个字符达到回文串
+找到不相等的位置， 删除其中一个， 看中间是否是回文串。return isvalidsubP(l,r-1) || (l+1, r)
+
+Two Sum:
+Hash map:
+put all numbers into hash map
+ask if target - A[i] in hash map, if true return target - A[i], A[i]
+
+Two pointer:
+双指针一般要先排序 O(nlogn). 如已经排序， On.
+双指针法若需要加入数字，则每次都要排序。
+
+Two Sum - Unique pairs
+双指针：l r 不要指向多次相同的数。
+当移向下一个数时，看前面的数是否一样，一样就向前移动。
+左右指针不能交叉。
+
+3 Sum unique pairs: O(n^2)
+ a + b + c = target
+
+ a + b = target - c
+
+枚举c， 双指针求 a, b
+
+
+partition array
+
+随着l r 的合拢， 排好的部分越来越多。
+
+
+quick select
+
+求第k小的数， partition 左右， 看左右两边array长度决定这个数字会在哪一边
+quick sort 需要在一顿一样的数时均分这些一样的数， 所以 nums[left] < k , nums[right] > k 来均分这些相同的数。
+
+
+
+
+Sort colors:
+排三个数字
+3个指针，1一个指针做1， 1一个做2， 中间指针将1和2甩给l 和 r
+
+Sork colors k种颜色（rainbow sort）: nlogk
+
+同向双指针：linked list cycyle
+
+Move Zeros:
+l 指针前面都是非0
+当i看到非零就和l交换
+所有的些操作在非0时发生2次
+写操作次数 = 2*非0个数
+follow up： 
+保证修改次数最少？
+不维护相对顺序？ 用partition， 需要维护顺序只能用双指针
+
