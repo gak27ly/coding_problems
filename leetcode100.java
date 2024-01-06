@@ -184,6 +184,24 @@ public String longestCommonPrefix(String[] strs) {
     return res;
 }
 
+public String longestCommonPrefix(String[] strs) {
+    if(strs == null || strs.length == 0)
+        return "";
+        
+    StringBuilder res = new StringBuilder();
+    
+    for(int i = 0; i < strs[0].length(); i++){
+        for(int j = 1; j < strs.length; j++){
+            if(i == strs[j].length() || strs[j].charAt(i) != strs[0].charAt(i)){
+                return res.toString();
+            }
+        }
+        res.append(strs[0].charAt(i));
+    }
+    
+    return res.toString();
+}
+
 /*
 15. 3Sum
 注意点： 需要在index上去重，还需要在left上去重

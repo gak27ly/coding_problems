@@ -39,3 +39,63 @@ rpc 通信
 .java -> java compiler -> .class(bytecode) -> JMV -> instruction code -> CPU
 
 
+1.编译完成以后，形成字节码文件，用JVM中的加载器和解释器对字节码文件进行解释运行。 此时才会把类加载到内存中。
+局部变量存储在栈结构中
+将object和object的(非static)属性加载在heap中
+
+2. 方法重载overload - 只与类，方法名，参数列表有关
+与权限，返回值，参数名称无关
+
+3. 权限修饰符(从小到大）: privated, default(缺省), protected, public.
+private:  class
+default:  class，package
+protected:class, package, son class
+public: class, package, son class, same project
+修饰class只能用pulbic或者default
+
+4. this
+修饰属性和方法: 当前对象
+在类的方法中，可以使用this.属性 或者 this.方法的方式 来调用
+当前对象的属性或方法。 通常可以省略"this." 如果方法的形参和方法
+属性同名，就需要使用this.变量的方式表明此变量是属性. 
+
+修饰，调用构造器:
+this(args) 来调用其他的构造器
+a. 调用其他构造器必须在构造器的首行
+b. 只能调用一个其他的构造器
+
+5. 继承了父类所有的属性和方法
+父类中private的属性和方法，因为封装性的影响是的子类不能直接调用
+父类中private的结构和方法.
+
+重写
+子类的方法重写的权限不能小于父类中的该方法 
+子类中不能重写父类中private的方法
+父类被重写方法的返回值是void，子类重写方法返回值也只能是void
+
+父类被重写方法的返回值是A, 子类重新方法的返回值类型可以是A或A的子类
+子类抛出异常可以是父类被重写方法抛出异常的子类
+
+多态
+1. Person p = new Man();
+多态的使用： 虚拟方法调用
+有了对象的多态性以后，在编译期只能调用父类中声明的方法
+但在运行期，实际执行的是子类重写父类的方法.
+总结： 编译看左边，运行看右边.(只适用于方法，属性全都看左边申明的类)
+多态性使用前提： 1.类的继承关系 2.方法的重写
+
+自动装箱：
+int num = 10；
+Integer int1 = new Integer(num);
+自动开箱：
+int num1 = int1;
+
+primative type -> String
+int i = 5;
+String str = String.valueOf(i);
+
+Sting -> primative type
+String str1 = "123";
+int num1 = Integer.parseInt(str1);
+String str2 = "true";
+boolean b1 = Boolean.parseBoolean(str2);

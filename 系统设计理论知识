@@ -1,0 +1,23 @@
+CAP theorem 
+ACID VS BASE
+Partitioning/Sharding Data(Consistent Hashing)
+Optimistic vs Pessimistic Locking
+Strong vs Eventual Consistency
+Relational DB VS NoSql
+Types of NoSql
+	Key Value
+	Wide Column
+	Document based
+	Graph based
+
+Caching
+
+Random vs Sequential read/write on disk
+
+http vs http2 vs websockets
+TCP/IP model
+IPV 4 VS IPV6
+TCP VS UDP
+DNS lookup
+Https and TLS
+
