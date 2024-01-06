@@ -143,3 +143,56 @@ public int[] productExceptSelf(int[] nums) {
     }
     return res;
 }
+
+
+/**
+* Reverse a linked list
+*/
+public ListNode reverseList(ListNode head) {
+    ListNode curr = head;
+    ListNode pre = null;
+    ListNode next = null;
+
+    while (curr != null) {
+        next = curr.next;
+        curr.next = pre;
+        pre = curr;
+        curr = next;
+    }
+    return pre;
+}
+
+public ListNode reverseList(ListNode head) {
+    return rev(head, null);
+}
+
+public ListNode rev(ListNode node, ListNode pre) {
+    if (node == null) return pre;
+    ListNode temp = node.next;
+    node.next = pre;
+    return rev(temp, node);
+}
+
+/**
+* Remove Nth node from end
+*/
+public ListNode removeNthFromEnd(ListNode head, int n) {
+    if (head == null) return null;
+    ListNode dummy = new ListNode(0);
+    dummy.next = head;
+    ListNode slow = dummy;
+    ListNode fast = dummy;
+    
+    for (int i = 0; i < n; i++){
+        fast = fast.next;
+    }
+    
+    while (fast != null && fast.next != null){
+        slow = slow.next;
+        fast = fast.next;
+    }
+    
+    slow.next = slow.next.next;
+    
+    return dummy.next;      
+}
