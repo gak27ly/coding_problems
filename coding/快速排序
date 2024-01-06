@@ -1,0 +1,4 @@
+快速排序
+1.  左边 <= p , 右边 >= p 
+2. 拿出中间点index的value 为pivot 而不是index
+3. 左指针小于等于右指针 而不是小于， 否则造成stack over flow

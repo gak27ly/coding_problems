@@ -1,0 +1,58 @@
+动态规划2
+
+坐标型动态规划
+
+是否能使用动态规划：
+三要：
+1.求最值
+2.求方案总数
+3.求可行性
+
+三不要
+1.求所有方案
+2.输入数据无序
+3.暴力算法已经是多项式级别
+
+四要素：
+状态
+动态方程
+初始化
+答案
+
+自顶向下vs自底形上
+一个关心从哪来，一个关心到哪去
+
+空间优化技巧 
+滚动数组：用递推
+
+knight shortest path: 无法用动态规划
+
+knight shortest path ii:起始位置为0，0
+方向只能向右走w
+
+
+example question:
+longest increasing subsequence:
+如何求得具体方案： 倒推法
+记住是从哪来的
+用一个数组来记录从来哪的
+顺着钩子往回走
+
+continuous increasing subsequence
+
+russian doll envelopes
+信封接龙：降纬
+所有信封按长度排列。
+把宽度拿出来，宽度依次增加的序列
+长度相等，宽度大的放在前面
+
+largest divisible subset
+
+单词接龙：无顺序，无法使用动态规划
+
+
+
+
+
+
+
