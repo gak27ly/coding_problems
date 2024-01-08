@@ -196,3 +196,103 @@ public ListNode removeNthFromEnd(ListNode head, int n) {
     
     return dummy.next;      
 }
+
+/**
+* find LCA in BST
+* both greater/less than root, find on right/left branch, otherwise return root
+*/
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if (root.val < p.val && root.val < q.val) return lowestCommonAncestor(root.right, p, q);
+    if (root.val > p.val && root.val > q.val) return lowestCommonAncestor(root.left, p, q);
+    return root;
+}
+
+/**
+* rightSideView of tree
+* 压入queue时先压入右node 这样可以把这个level的第一个node加入res
+*/
+public List<Integer> rightSideView(TreeNode root) {
+    List<Integer> res = new ArrayList<>();
+    Queue<TreeNode> q = new LinkedList<>();
+    if (root == null) return res;
+
+    q.offer(root);
+
+    while(!q.isEmpty()) {
+        int size = q.size();
+        for(int i = size; i > 0; i--) {
+            TreeNode node = q.poll();
+            if (i == size) res.add(node.val);
+            if (node.right != null) q.offer(node.right);
+            if (node.left != null) q.offer(node.left);
+        }
+    }
+    return res;
+}
+
+/**
+* 1448: 
+* Given a binary tree root, a node X in the tree is named good if in the path from root to X there are no nodes with a value greater than X.
+* Return the number of good nodes in the binary tree.
+* pass down the max value
+*/
+public int goodNodes(TreeNode root) {
+    return dfs(root, root.val);
+}
+
+private int dfs(TreeNode root, int maxVal) {
+    if(root == null) return 0;
+    int curr = root.val >= maxVal? 1 : 0;
+
+    maxVal = Math.max(maxVal, root.val);
+    int left = dfs(root.left, maxVal);
+    int right = dfs(root.right, maxVal);
+    return left + right + curr;
+}
+
+/**
+* Use null as the initial max and min values as Integer.MAX_VALUE/Integer.MIN_VALUE have limits
+*/
+public boolean isValidBST(TreeNode root) {
+    return dfs(root, null, null);
+}
+
+private boolean dfs(TreeNode root, Integer minimum, Integer maximum) {
+    if (root == null) return true;
+    if (minimum != null && root.val <= minimum || maximum != null && root.val >= maximum) return false;
+
+    return dfs(root.left, minimum, root.val) && dfs(root.right, root.val, maximum);
+}
+
+/**
+* Get inOrder travse and check if the numbers are continuously increaseing
+*/
+public boolean isValidBST(TreeNode root) {
+    if(root == null){
+        return true;
+    }
+    
+    List<Integer> inOrder = new ArrayList<>();
+    inOrderTravse(root, inOrder);
+    
+    for(int i = 0; i < inOrder.size() - 1; i++) {
+        if(inOrder.get(i) >= inOrder.get(i+1)){
+            return false;
+        }
+    }
+    
+    return true;
+    
+}
+
+public void inOrderTravse(TreeNode root, List res) {
+    if (root == null) {
+        return;
+    }
+    
+    if (root != null) {
+        inOrderTravse(root.left, res);
+        res.add(root.val);
+        inOrderTravse(root.right, res);
+    }
+}
