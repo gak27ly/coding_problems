@@ -296,3 +296,184 @@ public void inOrderTravse(TreeNode root, List res) {
         inOrderTravse(root.right, res);
     }
 }
+
+/**
+* Find Kth smallest node in BST
+* recursive & iterative
+*/
+public int kthSmallest(TreeNode root, int k) {
+    List<Integer> list = new ArrayList<>();
+    inorder(root, list);
+    return list.get(k - 1);
+}
+
+private void inorder(TreeNode root, List<Integer> list) {
+    if (root == null) return;
+
+    inorder(root.left, list);
+    list.add(root.val);
+    inorder(root.right, list);
+}
+
+public int kthSmallest(TreeNode root, int k) {
+    Stack<TreeNode> st = new Stack<>();
+    int n = 0;
+
+    TreeNode curr = root;
+
+    while (curr != null || !st.empty()) {
+        while (curr != null) {
+            st.push(curr);
+            curr = curr.left;
+        }
+        curr = st.pop();
+        n++;
+        if (n == k) return curr.val;
+        curr = curr.right;
+    } 
+    return curr.val;
+}
+
+
+/**
+* Given two integer arrays preorder and inorder
+* construct and return the binary tree.
+*/
+
+public TreeNode buildTree(int[] preorder, int[] inorder) {
+    if (preorder.length == 0 || inorder.length == 0) return null;
+    
+    TreeNode root = new TreeNode(preorder[0]);
+    int mid = 0;
+    for (int i = 0; i < inorder.length; i++) {
+        if (preorder[0] == inorder[i]) mid = i;
+    }
+
+    root.left = buildTree(Arrays.copyOfRange(preorder, 1, mid + 1), Arrays.copyOfRange(inorder, 0, mid));
+    root.right = buildTree(Arrays.copyOfRange(preorder, mid + 1, preorder.length), Arrays.copyOfRange(inorder, mid + 1, inorder.length));
+    return root;
+}
+/**
+* Without copy a sub array
+*/
+HashMap<Integer, Integer> inorderMap = new HashMap<>();
+public TreeNode buildTree(int[] preorder, int[] inorder) {
+    for(int i = 0; i < inorder.length; i++) {
+        inorderMap.put(inorder[i], i);
+    }
+    return build(preorder, 0, 0, inorder.length - 1);
+}
+
+private TreeNode build(int[] preorder, int preorderIndex, int inorderLow, int inorderHigh) {
+    if (preorderIndex > preorder.length - 1 || inorderLow < 0 || inorderHigh > inorderMap.size() -1 || inorderLow > inorderHigh) return null;
+    int val = preorder[preorderIndex];
+    TreeNode root = new TreeNode(val);
+    int mid = inorderMap.get(val);
+    root.left = build(preorder, preorderIndex + 1, inorderLow, mid - 1);
+    root.right = build(preorder, preorderIndex + mid - inorderLow + 1, mid + 1, inorderHigh);
+    return root;
+}
+
+
+/**
+* Subsets I
+*/
+public List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> res = new ArrayList<List<Integer>>();
+    if (nums == null || nums.length == 0)
+        return res;
+    
+    dfs(nums, 0, new ArrayList<Integer>(), res);
+    return res;
+}
+
+private void dfs(int[] nums, int startIndex, List<Integer> subset, List<List<Integer>> res) {
+    
+    res.add(new ArrayList<Integer>(subset));
+    
+    for (int i = startIndex; i < nums.length; i++) {
+        subset.add(nums[i]);
+        dfs(nums, i + 1, subset, res);
+        subset.remove(subset.size() - 1);
+    }
+}
+
+/**
+* Subsets II with duplicates and non-ordered array
+*/
+public List<List<Integer>> subsetsWithDup(int[] nums) {
+    Arrays.sort(nums);
+    List<List<Integer>> res = new ArrayList<>();
+    dfs(nums, 0, new ArrayList<Integer>(), res);
+    return res;
+}
+
+private void dfs(int[] nums, int start, List<Integer> curr, List<List<Integer>> res) {
+    res.add(new ArrayList<>(curr));
+
+    for (int i = start; i < nums.length; i++) {
+        if (i != start && nums[i] == nums[i - 1]) continue;
+        curr.add(nums[i]);
+        dfs(nums, i + 1, curr, res);
+        curr.remove(curr.size() - 1);
+    }
+}
+
+/**
+* CombinationSum I
+*/
+public List<List<Integer>> combinationSum(int[] candidates, int target) {
+    List<List<Integer>> res = new ArrayList<>();
+    dfs(candidates, 0, target, new ArrayList<Integer>(), res);
+    return res;
+}
+
+private void dfs(int[] candidates, int start, int target, List<Integer> curr, List<List<Integer>> res) {
+    if (target == 0) {
+        res.add(new ArrayList<>(curr));
+        return;
+    } 
+    if (target < 0 || start > candidates.length - 1) {
+        return;
+    } 
+    for (int i = start; i < candidates.length; i++) {
+        curr.add(candidates[i]);
+        dfs(candidates, i, target - candidates[i], curr, res);
+        curr.remove(curr.size() - 1);
+    }
+}
+
+/**
+* CombinationSum II
+* remove duplicates
+*/
+public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+    List<List<Integer>> res = new ArrayList<>();
+    Arrays.sort(candidates);
+    dfs(candidates, 0, target, new ArrayList<Integer>(), res);
+    return res;
+}
+
+private void dfs(int[] nums,
+                 int index,
+                 int target, 
+                 List<Integer> combination, 
+                 List<List<Integer>>res){
+    if (target == 0){
+        res.add(new ArrayList<>(combination));
+        return;
+    }
+    
+    if (target < 0)
+        return;
+    for (int i = index; i< nums.length; i++){
+        if (i != index && nums[i] == nums[i - 1])
+            continue;
+        combination.add(nums[i]);
+        dfs(nums, i + 1, target - nums[i], combination, res);
+        combination.remove(combination.size() - 1);
+    }
+}
+
+
+
